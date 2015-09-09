@@ -7,11 +7,13 @@ public class VideoVO {
 	private int memberId;
 	private String videoWebsite;
 	private String videoClassName;
+	private String videoTitle;
 	private String videoName;
 	private String videoPath;
 	private java.util.Date videoUploadTime;
 	private long videoWatchTimes;
 	private String videoDescription;
+	private java.util.Date videoDescriptionModifyTime;
 	
 	@Override
 	public String toString() {
@@ -43,6 +45,12 @@ public class VideoVO {
 	public void setVideoClassName(String videoClassName) {
 		this.videoClassName = videoClassName;
 	}
+	public String getVideoTitle() {
+		return videoTitle;
+	}
+	public void setVideoTitle(String videoTitle) {
+		this.videoTitle = videoTitle;
+	}
 	public String getVideoName() {
 		return videoName;
 	}
@@ -72,5 +80,11 @@ public class VideoVO {
 	}
 	public void setVideoDescription(String videoDescription) {
 		this.videoDescription = videoDescription;
+	}
+	public java.util.Date getVideoDescriptionModifyTime() {
+		return videoDescriptionModifyTime;
+	}
+	public void setVideoDescriptionModifyTime(java.util.Date videoDescriptionModifyTime) {
+		this.videoDescriptionModifyTime = videoDescriptionModifyTime;
 	}
 }

@@ -7,125 +7,116 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import model.dao.ChannelDAO;
 import model.vo.ChannelVO;
 
 public class ChannelDAOjdbc implements ChannelDAO {
-	private final String URL = "jdbc:sqlserver://localhost:1433;database=iTV";
-	private final String USERNAME = "sa";
-	private final String PASSWORD = "passw0rd";
-	
+	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
+	private static final String USERNAME = "iTVSoCool@y56pcc16br";
+	private static final String PASSWORD = "iTVisgood911";
+
 	private static final String SELECT_BY_ID = "select * from channel where memberId=? and channelNo=?";
-	
+
 	@Override
 	public ChannelVO select(int memberId, int channelNo) {
 		ChannelVO result = null;
 		ResultSet rset = null;
-		
-		try(Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID);) {
-			
 			stmt.setInt(1, memberId);
 			stmt.setInt(2, channelNo);
 			rset = stmt.executeQuery();
-			if(rset.next()) {
+			if (rset.next()) {
 				result = new ChannelVO();
 				result.setMemberId(rset.getInt("memberId"));
 				result.setChannelNo(rset.getByte("channelNo"));
 				result.setBroadcastWebsite(rset.getString("broadcastWebsite"));
-				
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return result;
 	}
 
 	private static final String SELECT_ALL = "select * from channel";
-	
+
 	@Override
 	public List<ChannelVO> selectAll() {
 		List<ChannelVO> list = null;
-		
-		try(
-				Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_ALL);
 				ResultSet rset = stmt.executeQuery();) {
-			
 			list = new ArrayList<ChannelVO>();
-			while(rset.next()) {
+			while (rset.next()) {
 				ChannelVO bean = new ChannelVO();
 				bean.setMemberId(rset.getInt("memberId"));
 				bean.setChannelNo(rset.getByte("channelNo"));
 				bean.setBroadcastWebsite(rset.getString("broadcastWebsite"));
-				
 				list.add(bean);
 			}
 		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return list;
 	}
-	
+
 	private static final String INSERT = "insert into channel(memberId,channelNo,broadcastWebsite) values (?,?,?)";
-	
+
 	@Override
 	public ChannelVO insert(ChannelVO bean) {
 		ChannelVO result = null;
-		try(
-				Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
-			if(bean!=null) {
+			if (bean != null) {
 				stmt.setInt(1, bean.getMemberId());
 				stmt.setInt(2, bean.getChannelNo());
 				stmt.setString(3, bean.getBroadcastWebsite());
 				int i = stmt.executeUpdate();
-				if(i==1) {
+				if (i == 1) {
 					result = bean;
 				}
 			}
 		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return result;
 	}
 
-	private static final String UPDATE = 
-			"update channel set broadcastWebsite=? where memberId=? and channelNo=?";
-	
+	private static final String UPDATE = "update channel set broadcastWebsite=? where memberId=? and channelNo=?";
+
 	@Override
 	public ChannelVO update(String broadcastWebsite, int memberId, int channelNo) {
 		ChannelVO result = null;
-		try(
-				Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE);) {
 			stmt.setString(1, broadcastWebsite);
 			stmt.setInt(2, memberId);
 			stmt.setInt(3, channelNo);
-
 			int i = stmt.executeUpdate();
-			if(i==1) {
+			if (i == 1) {
 				result = this.select(memberId, channelNo);
 			}
 		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
-	private static final String DELETE =
-			"delete from channel where memberId=? and channelNo=?";
+
+	private static final String DELETE = "delete from channel where memberId=? and channelNo=?";
 
 	@Override
 	public boolean delete(int memberId, int channelNo) {
-		try(
-				Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement stmt = conn.prepareStatement(DELETE);) {			
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
 			stmt.setInt(1, memberId);
 			stmt.setInt(2, channelNo);
 			int i = stmt.executeUpdate();
-			if(i==1) {
+			if (i == 1) {
 				return true;
 			}
 		} catch (SQLException e) {
@@ -135,36 +126,35 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	}
 
 	public static void main(String[] args) {
-		//Select
+		// Select
+		 ChannelDAO dao = new ChannelDAOjdbc();
+		 ChannelVO channel = dao.select(1,5);
+		 System.out.println(channel);
+
+		// Insert
+		// String s = "3";
+		//
+		// ChannelVO insert = new ChannelVO();
+		// insert.setMemberId(3);
+		// insert.setChannelNo(Byte.parseByte(s));
+		// insert.setBroadcastWebsite("http://nextinnovation.cloudapp.net/ITV/live/kimura");
+		//
+		// ChannelDAO dao = new ChannelDAOjdbc();
+		// ChannelVO list = dao.insert(insert);
+		// System.out.println("Insert : " + list.getMemberId());
+
+		// Update
+//		String channel = "4";
+//
+//		ChannelVO update = new ChannelVO();
+//		update.setMemberId(3);
+//		update.setChannelNo(Byte.parseByte(channel));
+//		update.setBroadcastWebsite("http://nextinnovation.cloudapp.net/ITV/live/kimura");
+//
 //		ChannelDAO dao = new ChannelDAOjdbc();
-//		ChannelVO list = dao.select(1,1);
-//		System.out.println(list.getMemberId() +" : "+list.getChannelNo());
-		
-		//Insert
-//		String s = "3";
-//		
-//		ChannelVO insert = new ChannelVO();
-//		insert.setMemberId(3);
-//		insert.setChannelNo(Byte.parseByte(s));
-//		insert.setBroadcastWebsite("http://nextinnovation.cloudapp.net/ITV/live/kimura");
-//		
-//		ChannelDAO dao = new ChannelDAOjdbc();
-//		ChannelVO list = dao.insert(insert);
-//		System.out.println("Insert : " + list.getMemberId());
-		
-		//Update
-		String channel = "4";
-		
-		ChannelVO update = new ChannelVO();
-		update.setMemberId(3);
-		update.setChannelNo(Byte.parseByte(channel));
-		update.setBroadcastWebsite("http://nextinnovation.cloudapp.net/ITV/live/kimura");
-				
-		ChannelDAO dao = new ChannelDAOjdbc();
-		ChannelVO list = dao.update(update.getBroadcastWebsite(),update.getMemberId(),update.getChannelNo());
-		System.out.println("Update : " + list.getMemberId());
-			
-		
+//		ChannelVO list = dao.update(update.getBroadcastWebsite(), update.getMemberId(), update.getChannelNo());
+//		System.out.println("Update : " + list.getMemberId());
+
 	}
 
 }

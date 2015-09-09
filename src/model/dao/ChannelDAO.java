@@ -5,13 +5,15 @@ import java.util.List;
 import model.vo.ChannelVO;
 
 public interface ChannelDAO {
-	public abstract ChannelVO select(int memberId, int channelNo);
 
-	public abstract List<ChannelVO> selectAll();
+	public ChannelVO select(int memberId, int channelNo);
 
-	public abstract ChannelVO insert(ChannelVO bean);
+	public List<ChannelVO> selectAll();
 
-	public abstract ChannelVO update(String broadcastWebsite, int memberId, int channelNo);
+	public ChannelVO insert(ChannelVO bean);
 
-	public abstract boolean delete(int memberId, int channelNo);
+	public ChannelVO update(String broadcastWebsite, int memberId, int channelNo);
+
+	public boolean delete(int memberId, int channelNo);
+
 }

@@ -4,15 +4,16 @@ import java.util.List;
 
 import model.vo.ShowVO;
 
-
 public interface ShowDAO {
-	public abstract ShowVO select(int memberId);
 
-	public abstract List<ShowVO> selectAll();
+	public List<ShowVO> select(int memberId);
 
-	public abstract ShowVO insert(ShowVO bean);
+	public List<ShowVO> selectAll();
 
-	public abstract ShowVO update(java.util.Date showTime, String website, int memberId);
+	public ShowVO insert(ShowVO bean);
 
-	public abstract boolean delete(int memberId);
+	public List<ShowVO> update(java.util.Date showTime, String website, int memberId, java.util.Date showTimed);
+
+	public boolean delete(int memberId, java.util.Date showTime);
+
 }

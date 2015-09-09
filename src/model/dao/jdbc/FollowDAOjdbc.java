@@ -10,49 +10,35 @@ import java.util.List;
 import model.vo.FollowVO;
 
 public class FollowDAOjdbc {
-	private static final String URL = "jdbc:sqlserver://localhost:1433;database=iTV";
-	private static final String USER = "sa";
-	private static final String PASSWORD = "passw0rd";
+	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
+	private static final String USER = "iTVSoCool@y56pcc16br";
+	private static final String PASSWORD = "iTVisgood911";
 
-	private static final String SELECT_BY_FOLLOWID_AND_MEMBERID = "select * from Follow where followId =? and memberId=?";
+	private static final String SELECT_BY_MEMBERID = "SELECT * FROM Follow WHERE memberId=?";
 
-	public FollowVO select(int followId, int memberId) {
-		FollowVO result = null;
-
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet rset = null;
-
-		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			stmt = conn.prepareStatement(SELECT_BY_FOLLOWID_AND_MEMBERID);
-
-			stmt.setInt(1, followId);
-			stmt.setInt(2, memberId);
-			rset = stmt.executeQuery();
-
-			if (rset.next()) {
-				result = new FollowVO();
-				result.setMemberId(rset.getInt("memberId"));
-				result.setFollowId(rset.getInt("followId"));
+	public List<FollowVO> select(int memberId) {
+		List<FollowVO> list = null;
+		FollowVO follow = null;
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_MEMBERID);) {
+			stmt.setInt(1, memberId);
+			ResultSet rset = stmt.executeQuery();
+			list = new ArrayList<FollowVO>();
+			while (rset.next()) {
+				follow = new FollowVO();
+				follow.setMemberId(rset.getInt("memberId"));
+				follow.setFollowId(rset.getInt("followId"));
+				list.add(follow);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
-		return result;
+		return list;
 	}
 
 	private static final String SELECT_ALL = "select * from Follow";
 
-	public List<FollowVO> select() {
+	public List<FollowVO> selectAll() {
 		List<FollowVO> result = null;
 
 		Connection conn = null;
@@ -89,14 +75,8 @@ public class FollowDAOjdbc {
 
 	public FollowVO insert(FollowVO bean) {
 		FollowVO result = null;
-
-		Connection conn = null;
-		PreparedStatement stmt = null;
-
-		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			stmt = conn.prepareStatement(INSERT);
-
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
 			if (bean != null) {
 				stmt.setInt(1, bean.getMemberId());
 				stmt.setInt(2, bean.getFollowId());
@@ -107,12 +87,6 @@ public class FollowDAOjdbc {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return result;
 	}
@@ -120,14 +94,8 @@ public class FollowDAOjdbc {
 	private static final String DELETE = "delete from Follow where followId=? and memberId=?";
 
 	public boolean delete(int followId, int memberId) {
-
-		Connection conn = null;
-		PreparedStatement stmt = null;
-
-		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			stmt = conn.prepareStatement(DELETE);
-
+		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
 			stmt.setInt(1, followId);
 			stmt.setInt(2, memberId);
 			int i = stmt.executeUpdate();
@@ -136,18 +104,21 @@ public class FollowDAOjdbc {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 		return false;
 	}
 
-	
-
+	public static void main(String[] args) {
+		FollowDAOjdbc follow = new FollowDAOjdbc();
+//		System.out.println(follow.selectAll());
+		
+//		System.out.println(follow.select(4));
+		
+		FollowVO bean = new FollowVO();
+		bean.setMemberId(4);
+		bean.setFollowId(2);
+//		System.out.println(follow.insert(bean));
+		
+		System.out.println(follow.delete(2, 4));
+	}
 }
