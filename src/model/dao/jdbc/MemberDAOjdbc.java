@@ -10,13 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 import model.vo.MemberVO;
 
-public class MemberDAOjdbc {
+public class MemberDAOjdbc implements MemberDAO {
 	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
 	private final String PASSWORD = "iTVisgood911";
 	
 	private static final String INSERT=
 			"INSERT INTO member (memberAccount,memberPassword,memberEmail,broadcastWebsite,memberRegisterTime) VALUES (?, cast( ? as varbinary(50)), ?,?,?)";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.MemberDAO#insert(model.vo.MemberVO)
+	 */
+	@Override
 	public int insert(MemberVO member) throws SQLException {
 		//要先檢查bean是否為null
 		int updateCount=0;
@@ -38,6 +42,10 @@ public class MemberDAOjdbc {
 	//問題在於若不同人在不同網站申請相同帳號的信箱，後者會無法申請，因為自動產生的broadcastWebsite會重複
 	private static final String INSERT2=
 			"INSERT INTO member (memberEmail,memberPassword,memberAccount,broadcastWebsite) VALUES (?,cast( ? as varbinary(50)), ?,?)";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.MemberDAO#insert2(model.vo.MemberVO)
+	 */
+	@Override
 	public int insert2(MemberVO member)  {
 		//要先檢查bean是否為null
 		int updateCount = 0;
@@ -56,6 +64,10 @@ public class MemberDAOjdbc {
 	
 	private static final String SELECT_ALL_MEMBER=
 			"SELECT memberId,memberAccount, broadcastWebsite FROM member ORDER BY memberAccount";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.MemberDAO#getMemberList()
+	 */
+	@Override
 	public List<MemberVO> getMemberList()  {
 		List<MemberVO> members=null;
 		MemberVO member = null;
@@ -77,6 +89,10 @@ public class MemberDAOjdbc {
 	}
 	
 	private static final String GET_ID="SELECT memberId FROM member WHERE memberAccount=?";		
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.MemberDAO#getId(java.lang.String)
+	 */
+	@Override
 	public int getId(String memberAccount) {
 		int result =0;
 		try (Connection  conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
@@ -97,6 +113,10 @@ public class MemberDAOjdbc {
 			"UPDATE member SET memberPassword=?, memberEmail=?, memberFB=?, memberGoogle=?, memberTwitter=?, memberNickname=?,"
 			+"memberBirthday=?,memberPhoto=?,memberSelfIntroduction=?,broadcastTitle=?,broadcastClassName=?,"
 			+"broadcastTime=?,broadcastDescription=? WHERE memberId=?";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.MemberDAO#update(model.vo.MemberVO)
+	 */
+	@Override
 	public int update(MemberVO member) {
 		//要先檢查bean是否為null
 		int updateCount = 0;
@@ -126,6 +146,10 @@ public class MemberDAOjdbc {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.MemberDAO#selectAll()
+	 */
+	@Override
 	public List<MemberVO> selectAll () {
 		List<MemberVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -162,6 +186,10 @@ public class MemberDAOjdbc {
 			+"broadcastWebsite,broadcastTitle,broadcastClassName,broadcastTime,broadcastDescription,"
 			+"broadcastWatchTimes FROM member WHERE memberId=?";
 	
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.MemberDAO#findByPK(int)
+	 */
+	@Override
 	public MemberVO findByPK(int memberId) {
 		MemberVO member=null;
 		try (Connection  conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
@@ -198,7 +226,7 @@ public class MemberDAOjdbc {
 	
 	//測試程式
 	public static void main (String[] args) throws SQLException, ParseException {
-		MemberDAOjdbc temp = new MemberDAOjdbc();		
+		MemberDAO temp = new MemberDAOjdbc();		
 		//memberDao的insert，與insert的差異在於用戶需輸入memberAccount
 //		MemberVO member1 = new MemberVO();
 //		member1.setMemberAccount("Micky Wong");
