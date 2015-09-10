@@ -16,7 +16,7 @@ public class MemberDAOjdbc {
 	private final String PASSWORD = "iTVisgood911";
 	
 	private static final String INSERT=
-			"INSERT INTO member (memberAccount,memberPassword,memberEmail,broadcastWebsite) VALUES (?, cast( ? as varbinary(50)), ?,?)";
+			"INSERT INTO member (memberAccount,memberPassword,memberEmail,broadcastWebsite,memberRegisterTime) VALUES (?, cast( ? as varbinary(50)), ?,?,?)";
 	public int insert(MemberVO member) throws SQLException {
 		//要先檢查bean是否為null
 		int updateCount=0;
@@ -26,6 +26,8 @@ public class MemberDAOjdbc {
 			pstmt.setBytes(2, member.getMemberPassword());
 			pstmt.setString(3, member.getMemberEmail());
 			pstmt.setString(4,"http://iTV.com/broadcast/"+member.getMemberAccount());
+			long registry = member.getMemberRegisterTime().getTime();			
+			pstmt.setTimestamp(5, new java.sql.Timestamp(registry));
 			updateCount = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
