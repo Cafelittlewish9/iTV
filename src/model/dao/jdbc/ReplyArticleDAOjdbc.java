@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.dao.ReplyArticleDAO;
 import model.vo.ReplyArticleVO;
 	
 public class ReplyArticleDAOjdbc implements ReplyArticleDAO {

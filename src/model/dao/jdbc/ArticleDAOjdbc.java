@@ -8,9 +8,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.dao.ArticleDAO;
-import model.vo.ArticleClassVO;
 import model.vo.ArticleVO;
 
 public class ArticleDAOjdbc implements ArticleDAO {
