@@ -9,20 +9,22 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.dao.ArticleDAO;
 import model.vo.ArticleClassVO;
 import model.vo.ArticleVO;
 
-public class ArticleDAOjdbc {
-	// private final String URL =
-	// "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	// private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
-	// private final String PASSWORD = "iTVisgood911";
-	private static final String URL = "jdbc:sqlserver://ogie1nin1c.database.windows.net:1433;database=labweb";
-	private static final String USERNAME = "shekx";
-	private static final String PASSWORD = "eeit800*";
+public class ArticleDAOjdbc implements ArticleDAO {
+	 private final String URL =
+	 "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
+	 private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
+	 private final String PASSWORD = "iTVisgood911";
 
 	private static final String SELECT_ALL = "SELECT articleId,memberId,subclassNo,articleTitle,articleContent,publishTime,modifyTime,watchTimes FROM article";
 
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleDAO#selectAll()
+	 */
+	@Override
 	public List<ArticleVO> selectAll() {
 		ArticleVO avo;
 		List<ArticleVO> avos = null;
@@ -50,6 +52,10 @@ public class ArticleDAOjdbc {
 
 	private static final String INSERT = "INSERT INTO Article (memberId, subclassNo,articleTitle,articleContent) VALUES (?,?,?,?)";
 
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleDAO#insert(model.vo.ArticleVO)
+	 */
+	@Override
 	public boolean insert(ArticleVO article) {
 		boolean result = false;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -71,6 +77,10 @@ public class ArticleDAOjdbc {
 	// 必須是發文的作者本人才能修改該篇文章
 	private static final String UPDATE = "UPDATE Article SET subclassNo=?,articleTitle=?,articleContent=?,modifyTime=?WHERE articleId=? AND memberId=?";
 
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleDAO#update(model.vo.ArticleVO)
+	 */
+	@Override
 	public boolean update(ArticleVO article) {
 		boolean result = false;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -96,6 +106,10 @@ public class ArticleDAOjdbc {
 	// 同理，必須是發文的作者本人才能刪除該篇文章
 	private static final String DELETE = "DELETE FROM article WHERE articleId=? AND memberId=?";
 
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleDAO#delete(int, int)
+	 */
+	@Override
 	public boolean delete(int articleId, int memberId) {
 		boolean result = false;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -114,7 +128,7 @@ public class ArticleDAOjdbc {
 
 	// 測試程式
 	public static void main(String[] args) throws SQLException, ParseException {
-		ArticleDAOjdbc temp = new ArticleDAOjdbc();
+		ArticleDAO temp = new ArticleDAOjdbc();
 		ArticleVO avo = new ArticleVO();
 		// System.out.println(temp.selectAll());
 		// System.out.println(temp.delete(13, 2));

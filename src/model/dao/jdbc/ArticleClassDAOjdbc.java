@@ -7,19 +7,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.dao.ArticleClassDAO;
 import model.vo.ArticleClassVO;
 
-public class ArticleClassDAOjdbc {
-//	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-//	private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
-//	private final String PASSWORD = "iTVisgood911";	
-	private static final String URL="jdbc:sqlserver://ogie1nin1c.database.windows.net:1433;database=labweb";
-	private static final String USERNAME="shekx";
-	private static final String PASSWORD="eeit800*";
+public class ArticleClassDAOjdbc implements ArticleClassDAO {
+	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
+	private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
+	private final String PASSWORD = "iTVisgood911";	
 	
 	
 	private static final String SELECT_ALL =
 			"SELECT subclassNo,subclassName,className FROM articleclass";	
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleClassDAO#selectAll()
+	 */
+	@Override
 	public List<ArticleClassVO> selectAll() throws SQLException{
 		ArticleClassVO acvo;
 		List<ArticleClassVO> acvos=new ArrayList<ArticleClassVO>();
@@ -38,6 +41,10 @@ public class ArticleClassDAOjdbc {
 
 	private static final String SELECT =
 			"SELECT subclassNo,subclassName,className FROM articleclass WHERE subclassNo=?";	
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleClassDAO#select(java.lang.String)
+	 */
+	@Override
 	public ArticleClassVO select(String subclassNo) throws SQLException{
 		ArticleClassVO acvo=null;
 		Connection conn=DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -54,6 +61,10 @@ public class ArticleClassDAOjdbc {
 	}
 	
 	private static final String INSERT = "INSERT INTO ArticleClass VALUES (?,?,?)";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleClassDAO#insert(model.vo.ArticleClassVO)
+	 */
+	@Override
 	public boolean insert(ArticleClassVO articleClass) throws SQLException{
 		boolean result=false;		
 		Connection conn=DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -69,6 +80,10 @@ public class ArticleClassDAOjdbc {
 	}
 
 	private static final String UPDATE="UPDATE ArticleClass SET SubclassName=?,ClassName=? WHERE subclassNo=?";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleClassDAO#update(model.vo.ArticleClassVO)
+	 */
+	@Override
 	public boolean update(ArticleClassVO articleClass) throws SQLException {
 		boolean result=false;
 		if(articleClass!=null){
@@ -86,6 +101,10 @@ public class ArticleClassDAOjdbc {
 	}
 
 	private static final String DELETE = "DELETE FROM ArticleClass WHERE subclassNo=?";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ArticleClassDAO#delete(java.lang.String)
+	 */
+	@Override
 	public boolean delete(String subclassNo) throws SQLException {
 		boolean result=false;
 		Connection conn=DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -100,7 +119,7 @@ public class ArticleClassDAOjdbc {
 	
 	//測試程式
 	public static void main(String[] args) throws SQLException{
-		ArticleClassDAOjdbc temp=new ArticleClassDAOjdbc();
+		ArticleClassDAO temp=new ArticleClassDAOjdbc();
 		ArticleClassVO acvo=new ArticleClassVO();
 		acvo.setSubclassNo("o");
 		acvo.setSubclassName("聯航");

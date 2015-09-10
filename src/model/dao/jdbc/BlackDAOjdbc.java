@@ -7,17 +7,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.dao.BlackDAO;
 import model.vo.BlackVO;
 
-public class BlackDAOjdbc {
-//	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-//	private final String USERNAME = "iTVSoCool";// iTVSoCool@y56pcc16br
-//	private final String PASSWORD = "iTVisgood911";
-	private static final String URL="jdbc:sqlserver://ogie1nin1c.database.windows.net:1433;database=labweb";
-	private static final String USERNAME="shekx";
-	private static final String PASSWORD="eeit800*";	
+public class BlackDAOjdbc implements BlackDAO {
+	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
+	private final String USERNAME = "iTVSoCool";// iTVSoCool@y56pcc16br
+	private final String PASSWORD = "iTVisgood911";
 	
 	private static final String INSERT = "INSERT INTO black VALUES (?,?)";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.BlackDAO#markBlack(int, int)
+	 */
+	@Override
 	public boolean markBlack(int memberId, int blackedId)  {
 		boolean markResult = false;
 		int updateCount = 0;
@@ -40,6 +43,10 @@ public class BlackDAOjdbc {
 
 	private static final String GET_LIST = "SELECT blackedId FROM black WHERE memberId=?";
 
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.BlackDAO#getList(int)
+	 */
+	@Override
 	public List<BlackVO> getList(int memberId)  {
 		BlackVO blackMem = null;
 		List<BlackVO> blacks = new ArrayList<BlackVO>();
@@ -59,6 +66,10 @@ public class BlackDAOjdbc {
 	}
 
 	private static final String REMOVE_BLACK = "DELETE FROM black WHERE memberId=? AND blackedId=?";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.BlackDAO#removeBlack(int, int)
+	 */
+	@Override
 	public boolean removeBlack(int memberId, int blackedId) {
 		boolean result=false;
 		try(Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -77,6 +88,10 @@ public class BlackDAOjdbc {
 
 	// 突然覺得世間充滿大愛，所以將所有曾被設定為黑名單的人都解除
 	private static final String REMOVE_ALL = "DELETE FROM black WHERE memberId=?";
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.BlackDAO#removeAll(int)
+	 */
+	@Override
 	public boolean removeAll(int memberId) {
 		boolean removeResult=false;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -94,7 +109,7 @@ public class BlackDAOjdbc {
 	
 	//測試程式
 	public static void main(String[] args)throws SQLException{
-		BlackDAOjdbc blackDao=new BlackDAOjdbc(); 	
+		BlackDAO blackDao=new BlackDAOjdbc(); 	
 		//System.out.println(blackDao.markBlack(2,4));
 		//System.out.println(blackDao.markBlack(5,5));
 		System.out.println(blackDao.getList(4));
