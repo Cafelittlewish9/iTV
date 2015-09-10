@@ -9,18 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.vo.ReplyArticleVO;
-
-public class ReplyArticleDAOjdbc {
-//	private static final String URL = "jdbc:sqlserver://localhost:1433;database=iTV";
-//	private static final String USERNAME = "sa";
-//	private static final String PASSWORD = "sa123456";
-//	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-//	private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
-//	private final String PASSWORD = "iTVisgood911";
-	private static final String URL="jdbc:sqlserver://ogie1nin1c.database.windows.net:1433;database=labweb";
-	private static final String USERNAME="shekx";
-	private static final String PASSWORD="eeit800*";
-	
 	
 public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
@@ -167,3 +155,4 @@ public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 		// System.out.println("DELETE result = " + k);
 	}
 }
+
