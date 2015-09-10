@@ -10,13 +10,14 @@ import java.util.List;
 
 import model.vo.ReportMemberVO;
 
-public class ReportMemberDAOjdbc {
+public class ReportMemberDAOjdbc implements ReportMemberDAO {
 	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private static final String USER = "iTVSoCool@y56pcc16br";
 	private static final String PASSWORD = "iTVisgood911";
 
 	private static final String SELECT_BY_ID = "select * from ReportMember where reportedMemberId = ?";
 
+	@Override
 	public List<ReportMemberVO> select(int reportedMemberId) {
 		List<ReportMemberVO> list = null;
 		ReportMemberVO result = null;
@@ -41,6 +42,7 @@ public class ReportMemberDAOjdbc {
 
 	private static final String SELECT_ALL = "select * from ReportMember";
 
+	@Override
 	public List<ReportMemberVO> selectAll() {
 		List<ReportMemberVO> result = null;
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -63,6 +65,7 @@ public class ReportMemberDAOjdbc {
 
 	private static final String INSERT = "insert into ReportMember(reportedMemberId, reportTime, reportReason) values(?, ?, ?)";
 
+	@Override
 	public ReportMemberVO insert(ReportMemberVO bean) {
 		ReportMemberVO result = null;
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -129,6 +132,10 @@ public class ReportMemberDAOjdbc {
 
 	private static final String DELETE = "delete from ReportMember where orderId = ?";
 
+	/* (non-Javadoc)
+	 * @see model.dao.jdbc.ReportMemberDAO#delete(int)
+	 */
+	@Override
 	public boolean delete(int orderId) {
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
@@ -144,7 +151,7 @@ public class ReportMemberDAOjdbc {
 	}
 
 	public static void main(String[] args) {
-		ReportMemberDAOjdbc temp = new ReportMemberDAOjdbc();
+		ReportMemberDAO temp = new ReportMemberDAOjdbc();
 		// System.out.println(temp.selectAll());
 		System.out.println(temp.select(1));
 	}

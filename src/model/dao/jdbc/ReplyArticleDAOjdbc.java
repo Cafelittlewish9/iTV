@@ -10,13 +10,14 @@ import java.util.List;
 
 import model.vo.ReplyArticleVO;
 
-public class ReplyArticleDAOjdbc {
+public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private static final String USERNAME = "iTVSoCool@y56pcc16br";
 	private static final String PASSWORD = "iTVisgood911";
 
 	private static final String SELECT_ALL = "SELECT * FROM ReplyArticle";
 
+	@Override
 	public List<ReplyArticleVO> selectAll() {
 		List<ReplyArticleVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -42,6 +43,7 @@ public class ReplyArticleDAOjdbc {
 
 	private static final String SELECT_BY_ARTICLEID = "SELECT * FROM ReplyArticle WHERE articleId = ?";
 
+	@Override
 	public List<ReplyArticleVO> select(int articleId) {
 		List<ReplyArticleVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -69,6 +71,7 @@ public class ReplyArticleDAOjdbc {
 
 	private static final String INSERT = "INSERT INTO ReplyArticle(memberId, articleId, replyContent, publishTime, modifyTime) VALUES (?, ?, ?, ?, ?)";
 
+	@Override
 	public int insert(ReplyArticleVO replyArticle) {
 		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -88,6 +91,7 @@ public class ReplyArticleDAOjdbc {
 
 	private static final String UPDATE = "UPDATE ReplyArticle SET replyContent = ?, modifyTime = ? WHERE replyArticleId = ?";
 
+	@Override
 	public int update(ReplyArticleVO replyArticle) {
 		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -105,6 +109,7 @@ public class ReplyArticleDAOjdbc {
 
 	private static final String DELETE = "UPDATE ReplyArticle SET replyContent = N'文章已被刪除', modifyTime = ? WHERE replyArticleId = ?";
 
+	@Override
 	public int delete(ReplyArticleVO replyArticle) {
 		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -120,7 +125,7 @@ public class ReplyArticleDAOjdbc {
 	}
 
 	public static void main(String[] args) {
-		ReplyArticleDAOjdbc temp = new ReplyArticleDAOjdbc();
+		ReplyArticleDAO temp = new ReplyArticleDAOjdbc();
 
 		List<ReplyArticleVO> all = temp.selectAll();
 		System.out.println("SELECT_ALL result = " + all);

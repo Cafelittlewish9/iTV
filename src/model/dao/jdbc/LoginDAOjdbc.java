@@ -8,15 +8,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.dao.LoginDAO;
 import model.vo.LoginVO;
 
-public class LoginDAOjdbc {
+public class LoginDAOjdbc implements LoginDAO {
 	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private static final String USER = "iTVSoCool@y56pcc16br";
 	private static final String PASSWORD = "iTVisgood911";
 
 	private static final String SELECT_BY_MEMBERACCOUNT = "select * from Login where memberAccount = ?";
 
+	@Override
 	public List<LoginVO> select(String memberAccount) {
 		LoginVO bean = null;
 		List<LoginVO> list = null;
@@ -61,6 +63,7 @@ public class LoginDAOjdbc {
 
 	private static final String INSERT = "insert into Login(loginTime, ip, memberAccount) values(?, ?, ?)";
 
+	@Override
 	public LoginVO insert(LoginVO bean) {
 		LoginVO result = null;
 		try(Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -81,7 +84,7 @@ public class LoginDAOjdbc {
 	}
 	
 	public static void main(String[] args) {
-		LoginDAOjdbc temp = new LoginDAOjdbc();
+		LoginDAO temp = new LoginDAOjdbc();
 		System.out.println(temp.select("Pikachu"));
 		
 //		LoginVO bean = new LoginVO();

@@ -7,15 +7,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.dao.VideoDAO;
 import model.vo.VideoVO;
 
-public class VideoDAOjdbc {
+public class VideoDAOjdbc implements VideoDAO {
 	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private final String USERNAME = "iTVSoCool@y56pcc16br";
 	private final String PASSWORD = "iTVisgood911";
 
 	private static final String SELECT_BY_ID = "select * from video where videoTitle like ?";
 
+	@Override
 	public List<VideoVO> select(String videoTitle) {
 		VideoVO result = null;
 		List<VideoVO> list = null;
@@ -47,6 +50,7 @@ public class VideoDAOjdbc {
 
 	private static final String SELECT_ALL = "select * from video";
 
+	@Override
 	public List<VideoVO> selectAll() {
 		List<VideoVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -76,6 +80,7 @@ public class VideoDAOjdbc {
 
 	private static final String INSERT = "insert into video(memberId, videoWebsite, videoClassName, videoTitle, videoName, videoPath, videoUploadTime, videoWatchTimes, videoDescription, videoDescriptionModifyTime) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+	@Override
 	public boolean insert(VideoVO bean) {
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
@@ -103,6 +108,7 @@ public class VideoDAOjdbc {
 
 	private static final String UPDATE_DESCRIPTION = "update video set videoDescription = ?, videoDescriptionModifyTime = ? where videoId = ?";
 
+	@Override
 	public boolean update(String videoDescription, java.util.Date videoDescriptionModifyTime, int videoId) {
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_DESCRIPTION);) {
@@ -121,10 +127,11 @@ public class VideoDAOjdbc {
 	
 	private static final String UPDATE_WATCHTIMES = "update video set videoWatchTimes = ? where videoId = ?";
 
+	@Override
 	public void update(long videoWatchTimes, int videoId) {
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_WATCHTIMES);) {
-			stmt.setLong(1, videoWatchTimes + 1);
+			stmt.setLong(1, videoWatchTimes);
 			stmt.setInt(2, videoId);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -134,6 +141,7 @@ public class VideoDAOjdbc {
 
 	private static final String DELETE = "delete from video where videoId = ?";
 
+	@Override
 	public boolean delete(int videoId) {
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
@@ -150,7 +158,7 @@ public class VideoDAOjdbc {
 
 	public static void main(String[] args) {
 		// SelectALL
-		VideoDAOjdbc temp = new VideoDAOjdbc();
+		VideoDAO temp = new VideoDAOjdbc();
 		List<VideoVO> list = temp.selectAll();
 		System.out.println(list);
 

@@ -7,15 +7,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.dao.FollowDAO;
 import model.vo.FollowVO;
 
-public class FollowDAOjdbc {
+public class FollowDAOjdbc implements FollowDAO {
 	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private static final String USER = "iTVSoCool@y56pcc16br";
 	private static final String PASSWORD = "iTVisgood911";
 
 	private static final String SELECT_BY_MEMBERID = "SELECT * FROM Follow WHERE memberId=?";
 
+	@Override
 	public List<FollowVO> select(int memberId) {
 		List<FollowVO> list = null;
 		FollowVO follow = null;
@@ -38,6 +41,7 @@ public class FollowDAOjdbc {
 
 	private static final String SELECT_ALL = "select * from Follow";
 
+	@Override
 	public List<FollowVO> selectAll() {
 		List<FollowVO> result = null;
 
@@ -73,6 +77,7 @@ public class FollowDAOjdbc {
 
 	private static final String INSERT = "insert into follow(memberId, followId) values(?, ?)";
 
+	@Override
 	public FollowVO insert(FollowVO bean) {
 		FollowVO result = null;
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -93,6 +98,7 @@ public class FollowDAOjdbc {
 
 	private static final String DELETE = "delete from Follow where followId=? and memberId=?";
 
+	@Override
 	public boolean delete(int followId, int memberId) {
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
@@ -109,7 +115,7 @@ public class FollowDAOjdbc {
 	}
 
 	public static void main(String[] args) {
-		FollowDAOjdbc follow = new FollowDAOjdbc();
+		FollowDAO follow = new FollowDAOjdbc();
 //		System.out.println(follow.selectAll());
 		
 //		System.out.println(follow.select(4));
