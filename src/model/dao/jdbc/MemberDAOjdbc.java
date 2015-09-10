@@ -11,12 +11,9 @@ import java.util.List;
 import model.vo.MemberVO;
 
 public class MemberDAOjdbc {
-//	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-//	private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
-//	private final String PASSWORD = "iTVisgood911";
-	private static final String URL="jdbc:sqlserver://ogie1nin1c.database.windows.net:1433;database=labweb";
-	private static final String USERNAME="shekx";
-	private static final String PASSWORD="eeit800*";
+	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
+	private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
+	private final String PASSWORD = "iTVisgood911";
 	
 	private static final String INSERT=
 			"INSERT INTO member (memberAccount,memberPassword,memberEmail,broadcastWebsite) VALUES (?, cast( ? as varbinary(50)), ?,?)";
@@ -93,6 +90,7 @@ public class MemberDAOjdbc {
 		return result;
 	}
 	
+	//新增
 	private static final String UPDATE_INFO=
 			"UPDATE member SET memberPassword=?, memberEmail=?, memberFB=?, memberGoogle=?, memberTwitter=?, memberNickname=?,"
 			+"memberBirthday=?,memberPhoto=?,memberSelfIntroduction=?,broadcastTitle=?,broadcastClassName=?,"
