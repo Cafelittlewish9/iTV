@@ -7,9 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.vo.ReportVideoVO;
 
-public class ReportVideoDAOjdbc {
+import model.dao.ReportVideoDAO;
+import model.vo.ReportVideoVO;
+public class ReportVideoDAOjdbc implements ReportVideoDAO {
 
 	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private static final String USER = "iTVSoCool@y56pcc16br";
@@ -17,6 +18,7 @@ public class ReportVideoDAOjdbc {
 
 	private static final String SELECT_ALL = "SELECT * FROM ReportVideo";
 
+	@Override
 	public List<ReportVideoVO> selectAll() {
 		List<ReportVideoVO> list = new ArrayList<ReportVideoVO>();
 		Connection conn = null;
@@ -48,6 +50,7 @@ public class ReportVideoDAOjdbc {
 
 	private static final String INSERT = "INSERT INTO ReportVideo(reportedVideoId, reportReason) VALUES(?, ?)";
 
+	@Override
 	public boolean insert(ReportVideoVO reportVideo) {
 		Connection conn = null;
 		boolean result = false;
@@ -76,13 +79,14 @@ public class ReportVideoDAOjdbc {
 
 	private static final String DELETE = "DELETE FROM ReportVideo WHERE orderId = ?";
 
-	public boolean delete(int reportVideo) {
+	@Override
+	public boolean delete(int orderId) {
 		Connection conn = null;
 		boolean result = false;
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			PreparedStatement pstmt = conn.prepareStatement(DELETE);
-			pstmt.setInt(1, reportVideo);
+			pstmt.setInt(1, orderId);
 			int demo = pstmt.executeUpdate();
 			if (demo == 1) {
 				result = true;
@@ -102,7 +106,7 @@ public class ReportVideoDAOjdbc {
 	}
 
 	public static void main(String[] args) {
-		ReportVideoDAOjdbc dao = new ReportVideoDAOjdbc();
+		ReportVideoDAO dao = new ReportVideoDAOjdbc();
 		// INSERT
 		ReportVideoVO temp1 = new ReportVideoVO();
 		temp1.setOrderId(11);
