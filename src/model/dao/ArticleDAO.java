@@ -8,6 +8,12 @@ public interface ArticleDAO {
 
 	public List<ArticleVO> selectAll();
 
+	public List<ArticleVO> selectAll(String subclassNo);
+
+	public List<ArticleVO> select(String articleTitle);
+
+	public List<ArticleVO> select(int memberId);
+
 	public boolean insert(ArticleVO article);
 
 	public boolean update(ArticleVO article);
