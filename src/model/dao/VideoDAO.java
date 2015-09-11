@@ -6,16 +6,16 @@ import model.vo.VideoVO;
 
 public interface VideoDAO {
 
-	List<VideoVO> select(String videoTitle);
+	public List<VideoVO> select(String videoTitle);
 
-	List<VideoVO> selectAll();
+	public List<VideoVO> selectAll();
 
-	boolean insert(VideoVO bean);
+	public boolean insert(VideoVO bean);
 
-	boolean update(String videoDescription, java.util.Date videoDescriptionModifyTime, int videoId);
+	public boolean update(String videoDescription, java.util.Date videoDescriptionModifyTime, int videoId);
 
-	void update(long videoWatchTimes, int videoId);
+	public void update(long videoWatchTimes, int videoId);
 
-	boolean delete(int videoId);
+	public boolean delete(int videoId);
 
 }

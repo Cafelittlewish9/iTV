@@ -6,8 +6,12 @@ import model.vo.LoginVO;
 
 public interface LoginDAO {
 
-	List<LoginVO> select(String memberAccount);
+	public List<LoginVO> selectAll(String memberAccount);
+	
+	public List<LoginVO> selectAll();
+	
+	public LoginVO select(String memberAccount);
 
-	LoginVO insert(LoginVO bean);
+	public LoginVO insert(LoginVO bean);
 
 }

@@ -6,12 +6,12 @@ import model.vo.ReportMemberVO;
 
 public interface ReportMemberDAO {
 
-	List<ReportMemberVO> select(int reportedMemberId);
+	public List<ReportMemberVO> select(int reportedMemberId);
 
-	List<ReportMemberVO> selectAll();
+	public List<ReportMemberVO> selectAll();
 
-	ReportMemberVO insert(ReportMemberVO bean);
+	public ReportMemberVO insert(ReportMemberVO bean);
 
-	boolean delete(int orderId);
+	public boolean delete(int orderId);
 
 }

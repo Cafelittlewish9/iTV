@@ -6,14 +6,14 @@ import model.vo.ReplyArticleVO;
 
 public interface ReplyArticleDAO {
 
-	List<ReplyArticleVO> selectAll();
+	public List<ReplyArticleVO> selectAll();
 
-	List<ReplyArticleVO> select(int articleId);
+	public List<ReplyArticleVO> select(int articleId);
 
-	int insert(ReplyArticleVO replyArticle);
+	public int insert(ReplyArticleVO replyArticle);
 
-	int update(ReplyArticleVO replyArticle);
+	public int update(ReplyArticleVO replyArticle);
 
-	int delete(ReplyArticleVO replyArticle);
+	public int delete(ReplyArticleVO replyArticle);
 
 }

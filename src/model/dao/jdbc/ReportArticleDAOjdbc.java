@@ -7,44 +7,39 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.vo.ReportArticleVO;
 
 public class ReportArticleDAOjdbc {
 	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private static final String USER = "iTVSoCool@y56pcc16br";
 	private static final String PASSWORD = "iTVisgood911";
+
 	private static final String SELECT_ALL = "SELECT * FROM ReportArticle";
-	private static final String INSERT = "";
-	private static final String UPDATE = "";
-	private static final String DELETE = "";
-	
 
 	public List<ReportArticleVO> selectAll() {
-		List<ReportArticleVO> list = new ArrayList<ReportArticleVO>();
-		
+		List<ReportArticleVO> list = null;
 		ReportArticleVO reportArticle = null;
-		
 		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL);
 			ResultSet rs = pstmt.executeQuery();
-			
-			while(rs.next()){
+			list = new ArrayList<ReportArticleVO>();
+			while (rs.next()) {
 				reportArticle = new ReportArticleVO();
 				reportArticle.setOrderId(rs.getInt("orderId"));
 				reportArticle.setReportedArticleId(rs.getInt("reportedArticleId"));
+				reportArticle.setReportTime(rs.getTimestamp("reportTime"));
 				reportArticle.setReportReason(rs.getString("reportReason"));
-				list.add(reportArticle);		
+				list.add(reportArticle);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally{
-			if(conn != null){
-				try{
+		} finally {
+			if (conn != null) {
+				try {
 					conn.close();
-				}catch(SQLException e){
+				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
@@ -52,82 +47,81 @@ public class ReportArticleDAOjdbc {
 		return list;
 	}
 
+	private static final String INSERT = " INSERT INTO ReportArticle(reportedArticleId, reportReason) VALUES(?, ?) ";
+
 	public boolean insert(ReportArticleVO reportArticle) {
-		
 		Connection conn = null;
+		boolean result = false;
 		try {
-			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			PreparedStatement pstmt = conn.prepareStatement(INSERT);
-			
-			pstmt.setInt(1, reportArticle.getOrderId());
-			pstmt.setInt(2, reportArticle.getReportedArticleId());
-			pstmt.setString(4,reportArticle.getReportReason());
-			
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally{
-			if(conn != null){
-				try{
-					conn.close();
-				}catch(SQLException e){
-					e.printStackTrace();
-				}				
+			pstmt.setInt(1, reportArticle.getReportedArticleId());
+			pstmt.setString(2, reportArticle.getReportReason());
+			int demo = pstmt.executeUpdate();
+			if (demo == 1) {
+				result = true;
 			}
-		}
-		return false;
-	}
-
-	public boolean update(ReportArticleVO reportArticle) {
-		
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection(URL,USER,PASSWORD);
-			PreparedStatement pstmt = conn.prepareStatement(UPDATE);
-			
-			pstmt.setInt(1, reportArticle.getOrderId());
-			pstmt.setInt(2, reportArticle.getReportedArticleId());
-			pstmt.setString(4, reportArticle.getReportReason());
-			
-			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally{
-			if(conn != null){
-				try{
-					conn.close();			
-				}catch(SQLException e){
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
-		}	
-		return false;
+		}
+		return result;
 	}
 
-	public boolean delete(ReportArticleVO reportArticle) {
-		
+	private static final String DELETE = " DELETE FROM ReportArticle WHERE orderId = ?";
+
+	public boolean delete(int reportArticle) {
 		Connection conn = null;
+		boolean result = false;
 		try {
-			conn = DriverManager.getConnection(URL,USER,PASSWORD);
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			PreparedStatement pstmt = conn.prepareStatement(DELETE);
-			
-			pstmt.setInt(1, reportArticle.getOrderId());
-			pstmt.setInt(2, reportArticle.getReportedArticleId());
-			pstmt.setString(4, reportArticle.getReportReason());
-			
-			pstmt.executeUpdate();
+			pstmt.setInt(1, reportArticle);
+			int demo = pstmt.executeUpdate();
+			if (demo == 1) {
+				result = true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally{
-			if(conn != null){
-				try{
+		} finally {
+			if (conn != null) {
+				try {
 					conn.close();
-				}catch(SQLException e){
+				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		return false;
+		return result;
 	}
 
+	public static void main(String[] args) {
+		ReportArticleDAOjdbc dao = new ReportArticleDAOjdbc();
+		// INSERT
+		// ReportArticleVO temp1 = new ReportArticleVO();
+		// temp1.setOrderId(11);
+		// temp1.setReportedArticleId(12);
+		// temp1.setReportTime(new java.util.Date());
+		// temp1.setReportReason("測試新增");
+		// boolean test1 = dao.insert(temp1);
+		// System.out.println(test1);
+		// DELETE
+		boolean test3 = dao.delete(13);
+		System.out.println(test3);
+		// SELECT_ALL
+		List<ReportArticleVO> list = dao.selectAll();
+		for (ReportArticleVO dept : list) {
+			System.out.println(dept.getOrderId() + ",");
+			System.out.println(dept.getReportedArticleId() + ",");
+			System.out.println(dept.getReportTime() + ",");
+			System.out.println(dept.getReportReason());
+		}
+	}
 }

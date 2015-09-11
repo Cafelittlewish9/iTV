@@ -7,14 +7,14 @@ import model.vo.ArticleClassVO;
 
 public interface ArticleClassDAO {
 
-	List<ArticleClassVO> selectAll() throws SQLException;
+	public List<ArticleClassVO> selectAll() throws SQLException;
 
-	ArticleClassVO select(String subclassNo) throws SQLException;
+	public ArticleClassVO select(String subclassNo) throws SQLException;
 
-	boolean insert(ArticleClassVO articleClass) throws SQLException;
+	public boolean insert(ArticleClassVO articleClass) throws SQLException;
 
-	boolean update(ArticleClassVO articleClass) throws SQLException;
+	public boolean update(ArticleClassVO articleClass) throws SQLException;
 
-	boolean delete(String subclassNo) throws SQLException;
+	public boolean delete(String subclassNo) throws SQLException;
 
 }

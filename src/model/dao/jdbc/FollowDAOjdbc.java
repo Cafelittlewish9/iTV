@@ -19,7 +19,7 @@ public class FollowDAOjdbc implements FollowDAO {
 	private static final String SELECT_BY_MEMBERID = "SELECT * FROM Follow WHERE memberId=?";
 
 	@Override
-	public List<FollowVO> select(int memberId) {
+	public List<FollowVO> selectAll(int memberId) {
 		List<FollowVO> list = null;
 		FollowVO follow = null;
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -78,17 +78,14 @@ public class FollowDAOjdbc implements FollowDAO {
 	private static final String INSERT = "insert into follow(memberId, followId) values(?, ?)";
 
 	@Override
-	public FollowVO insert(FollowVO bean) {
-		FollowVO result = null;
+	public int insert(FollowVO bean) {
+		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
 			if (bean != null) {
 				stmt.setInt(1, bean.getMemberId());
 				stmt.setInt(2, bean.getFollowId());
-				int i = stmt.executeUpdate();
-				if (i == 1) {
-					result = bean;
-				}
+				result = stmt.executeUpdate();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

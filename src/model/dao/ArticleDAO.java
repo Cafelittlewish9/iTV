@@ -6,12 +6,12 @@ import model.vo.ArticleVO;
 
 public interface ArticleDAO {
 
-	List<ArticleVO> selectAll();
+	public List<ArticleVO> selectAll();
 
-	boolean insert(ArticleVO article);
+	public boolean insert(ArticleVO article);
 
-	boolean update(ArticleVO article);
+	public boolean update(ArticleVO article);
 
-	boolean delete(int articleId, int memberId);
+	public boolean delete(int articleId, int memberId);
 
 }

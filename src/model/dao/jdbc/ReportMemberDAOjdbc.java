@@ -64,7 +64,7 @@ public class ReportMemberDAOjdbc implements ReportMemberDAO {
 		return result;
 	}
 
-	private static final String INSERT = "insert into ReportMember(reportedMemberId, reportTime, reportReason) values(?, ?, ?)";
+	private static final String INSERT = "insert into ReportMember(reportedMemberId, reportReason) values(?, ?)";
 
 	@Override
 	public ReportMemberVO insert(ReportMemberVO bean) {
@@ -73,8 +73,7 @@ public class ReportMemberDAOjdbc implements ReportMemberDAO {
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
 			if (bean != null) {
 				stmt.setInt(1, bean.getReportedMemberId());
-				stmt.setTimestamp(2, new java.sql.Timestamp(bean.getReportTime().getTime()));
-				stmt.setString(3, bean.getReportReason());
+				stmt.setString(2, bean.getReportReason());
 				int i = stmt.executeUpdate();
 				if (i == 1) {
 					result = bean;

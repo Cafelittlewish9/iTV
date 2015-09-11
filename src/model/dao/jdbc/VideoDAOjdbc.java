@@ -78,7 +78,7 @@ public class VideoDAOjdbc implements VideoDAO {
 		return list;
 	}
 
-	private static final String INSERT = "insert into video(memberId, videoWebsite, videoClassName, videoTitle, videoName, videoPath, videoUploadTime, videoWatchTimes, videoDescription, videoDescriptionModifyTime) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String INSERT = "insert into video(memberId, videoWebsite, videoClassName, videoTitle, videoName, videoPath, videoWatchTimes, videoDescription) values (?, ?, ?, ?, ?, ?, ?, ?)";
 
 	@Override
 	public boolean insert(VideoVO bean) {
@@ -91,10 +91,8 @@ public class VideoDAOjdbc implements VideoDAO {
 				stmt.setString(4, bean.getVideoTitle());
 				stmt.setString(5, bean.getVideoName());
 				stmt.setString(6, bean.getVideoPath());
-				stmt.setTimestamp(7, new java.sql.Timestamp(bean.getVideoUploadTime().getTime()));
-				stmt.setLong(8, bean.getVideoWatchTimes());
-				stmt.setString(9, bean.getVideoDescription());
-				stmt.setTimestamp(10, new java.sql.Timestamp(bean.getVideoDescriptionModifyTime().getTime()));
+				stmt.setLong(7, bean.getVideoWatchTimes());
+				stmt.setString(8, bean.getVideoDescription());
 				int i = stmt.executeUpdate();
 				if (i == 1) {
 					return true;
@@ -106,15 +104,14 @@ public class VideoDAOjdbc implements VideoDAO {
 		return false;
 	}
 
-	private static final String UPDATE_DESCRIPTION = "update video set videoDescription = ?, videoDescriptionModifyTime = ? where videoId = ?";
+	private static final String UPDATE_DESCRIPTION = "update video set videoDescription = ?, videoDescriptionModifyTime = GETUTCDATE() where videoId = ?";
 
 	@Override
 	public boolean update(String videoDescription, java.util.Date videoDescriptionModifyTime, int videoId) {
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_DESCRIPTION);) {
 			stmt.setString(1, videoDescription);
-			stmt.setTimestamp(2, new java.sql.Timestamp(videoDescriptionModifyTime.getTime()));
-			stmt.setInt(3, videoId);
+			stmt.setInt(2, videoId);
 			int i = stmt.executeUpdate();
 			if (i == 1) {
 				return true;

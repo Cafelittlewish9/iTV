@@ -16,14 +16,14 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String USERNAME = "iTVSoCool@y56pcc16br";
 	private static final String PASSWORD = "iTVisgood911";
 
-	private static final String SELECT_BY_ID = "select * from channel where memberId=? and channelNo=?";
+	private static final String SELECT_BY_ID_CHANNELNO = "select * from channel where memberId=? and channelNo=?";
 
 	@Override
 	public ChannelVO select(int memberId, int channelNo) {
 		ChannelVO result = null;
 		ResultSet rset = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID);) {
+				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID_CHANNELNO);) {
 			stmt.setInt(1, memberId);
 			stmt.setInt(2, channelNo);
 			rset = stmt.executeQuery();
@@ -38,6 +38,32 @@ public class ChannelDAOjdbc implements ChannelDAO {
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	private static final String SELECT_BY_ID = "select * from channel where memberId = ?";
+
+	@Override
+	public List<ChannelVO> selectAll(int memberId) {
+		List<ChannelVO> list = null;
+		ChannelVO result = null;
+		ResultSet rset = null;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID);) {
+			stmt.setInt(1, memberId);
+			rset = stmt.executeQuery();
+			list = new ArrayList<ChannelVO>();
+			if (rset.next()) {
+				result = new ChannelVO();
+				result.setMemberId(rset.getInt("memberId"));
+				result.setChannelNo(rset.getByte("channelNo"));
+				result.setBroadcastWebsite(rset.getString("broadcastWebsite"));
+				list.add(result);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	private static final String SELECT_ALL = "select * from channel";
@@ -66,18 +92,15 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String INSERT = "insert into channel(memberId,channelNo,broadcastWebsite) values (?,?,?)";
 
 	@Override
-	public ChannelVO insert(ChannelVO bean) {
-		ChannelVO result = null;
+	public int insert(ChannelVO bean) {
+		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
 			if (bean != null) {
 				stmt.setInt(1, bean.getMemberId());
 				stmt.setInt(2, bean.getChannelNo());
 				stmt.setString(3, bean.getBroadcastWebsite());
-				int i = stmt.executeUpdate();
-				if (i == 1) {
-					result = bean;
-				}
+				result = stmt.executeUpdate();
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
@@ -89,17 +112,14 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String UPDATE = "update channel set broadcastWebsite=? where memberId=? and channelNo=?";
 
 	@Override
-	public ChannelVO update(String broadcastWebsite, int memberId, int channelNo) {
-		ChannelVO result = null;
+	public int update(String broadcastWebsite, int memberId, int channelNo) {
+		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE);) {
 			stmt.setString(1, broadcastWebsite);
 			stmt.setInt(2, memberId);
 			stmt.setInt(3, channelNo);
-			int i = stmt.executeUpdate();
-			if (i == 1) {
-				result = this.select(memberId, channelNo);
-			}
+			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
 			e.printStackTrace();
@@ -127,9 +147,9 @@ public class ChannelDAOjdbc implements ChannelDAO {
 
 	public static void main(String[] args) {
 		// Select
-		 ChannelDAO dao = new ChannelDAOjdbc();
-		 ChannelVO channel = dao.select(1,5);
-		 System.out.println(channel);
+		ChannelDAO dao = new ChannelDAOjdbc();
+		ChannelVO channel = dao.select(1, 5);
+		System.out.println(channel);
 
 		// Insert
 		// String s = "3";
@@ -144,16 +164,17 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		// System.out.println("Insert : " + list.getMemberId());
 
 		// Update
-//		String channel = "4";
-//
-//		ChannelVO update = new ChannelVO();
-//		update.setMemberId(3);
-//		update.setChannelNo(Byte.parseByte(channel));
-//		update.setBroadcastWebsite("http://nextinnovation.cloudapp.net/ITV/live/kimura");
-//
-//		ChannelDAO dao = new ChannelDAOjdbc();
-//		ChannelVO list = dao.update(update.getBroadcastWebsite(), update.getMemberId(), update.getChannelNo());
-//		System.out.println("Update : " + list.getMemberId());
+		// String channel = "4";
+		//
+		// ChannelVO update = new ChannelVO();
+		// update.setMemberId(3);
+		// update.setChannelNo(Byte.parseByte(channel));
+		// update.setBroadcastWebsite("http://nextinnovation.cloudapp.net/ITV/live/kimura");
+		//
+		// ChannelDAO dao = new ChannelDAOjdbc();
+		// ChannelVO list = dao.update(update.getBroadcastWebsite(),
+		// update.getMemberId(), update.getChannelNo());
+		// System.out.println("Update : " + list.getMemberId());
 
 	}
 

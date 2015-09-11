@@ -6,12 +6,12 @@ import model.vo.FollowVO;
 
 public interface FollowDAO {
 
-	List<FollowVO> select(int memberId);
+	public List<FollowVO> selectAll(int memberId);
 
-	List<FollowVO> selectAll();
+	public List<FollowVO> selectAll();
 
-	FollowVO insert(FollowVO bean);
+	public int insert(FollowVO bean);
 
-	boolean delete(int followId, int memberId);
+	public boolean delete(int followId, int memberId);
 
 }

@@ -70,7 +70,7 @@ public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 		return list;
 	}
 
-	private static final String INSERT = "INSERT INTO ReplyArticle(memberId, articleId, replyContent, publishTime, modifyTime) VALUES (?, ?, ?, ?, ?)";
+	private static final String INSERT = "INSERT INTO ReplyArticle(memberId, articleId, replyContent) VALUES (?, ?, ?)";
 
 	@Override
 	public int insert(ReplyArticleVO replyArticle) {
@@ -80,8 +80,6 @@ public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 			stmt.setInt(1, replyArticle.getMemberId());
 			stmt.setInt(2, replyArticle.getArticleId());
 			stmt.setString(3, replyArticle.getReplyContent());
-			stmt.setTimestamp(4, new java.sql.Timestamp(replyArticle.getPublishTime().getTime()));
-			stmt.setTimestamp(5, new java.sql.Timestamp(replyArticle.getModifyTime().getTime()));
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
@@ -90,7 +88,7 @@ public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 		return result;
 	}
 
-	private static final String UPDATE = "UPDATE ReplyArticle SET replyContent = ?, modifyTime = ? WHERE replyArticleId = ?";
+	private static final String UPDATE = "UPDATE ReplyArticle SET replyContent = ?, modifyTime = GETUTCDATE() WHERE replyArticleId = ?";
 
 	@Override
 	public int update(ReplyArticleVO replyArticle) {
@@ -98,8 +96,7 @@ public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE);) {
 			stmt.setString(1, replyArticle.getReplyContent());
-			stmt.setTimestamp(2, new java.sql.Timestamp(replyArticle.getModifyTime().getTime()));
-			stmt.setInt(3, replyArticle.getReplyArticleId());
+			stmt.setInt(2, replyArticle.getReplyArticleId());
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
@@ -108,15 +105,14 @@ public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 		return result;
 	}
 
-	private static final String DELETE = "UPDATE ReplyArticle SET replyContent = N'文章已被刪除', modifyTime = ? WHERE replyArticleId = ?";
+	private static final String DELETE = "UPDATE ReplyArticle SET replyContent = N'文章已被刪除', modifyTime = GETUTCDATE() WHERE replyArticleId = ?";
 
 	@Override
 	public int delete(ReplyArticleVO replyArticle) {
 		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
-			stmt.setTimestamp(1, new java.sql.Timestamp(replyArticle.getModifyTime().getTime()));
-			stmt.setInt(2, replyArticle.getReplyArticleId());
+			stmt.setInt(1, replyArticle.getReplyArticleId());
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());

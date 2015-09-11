@@ -43,6 +43,34 @@ public class CloudDAOjdbc implements CloudDAO {
 		return list;
 	}
 
+	private static final String SELECT_BY_MEMBERID = "SELECT * FROM Cloud WHERE memberId = ?";
+
+	@Override
+	public List<CloudVO> selectAll(int memberId) {
+		List<CloudVO> list = null;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_MEMBERID);) {
+			stmt.setInt(1, memberId);
+			ResultSet rs = stmt.executeQuery();
+			list = new ArrayList<CloudVO>();
+			while (rs.next()) {
+				CloudVO file = new CloudVO();
+				file.setFileId(rs.getInt("fileId"));
+				file.setMemberId(rs.getInt("memberId"));
+				file.setFileName(rs.getString("fileName"));
+				file.setFileType(rs.getString("fileType"));
+				file.setFilePath(rs.getString("filePath"));
+				file.setFileSize(rs.getLong("fileSize"));
+				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				list.add(file);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	private static final String SELECT_BY_FILENAME = "SELECT * FROM Cloud WHERE fileName like ?";
 
 	@Override
@@ -71,13 +99,13 @@ public class CloudDAOjdbc implements CloudDAO {
 		return list;
 	}
 
-	private static final String SELECT_BY_Time = "SELECT * FROM Cloud WHERE modifyTime BETWEEN ? AND ?";
+	private static final String SELECT_BY_TIME = "SELECT * FROM Cloud WHERE modifyTime BETWEEN ? AND ?";
 
 	@Override
 	public List<CloudVO> select(java.util.Date fromTime, java.util.Date toTime) {
 		List<CloudVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_Time);) {
+				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_TIME);) {
 			stmt.setTimestamp(1, new java.sql.Timestamp(fromTime.getTime()));
 			stmt.setTimestamp(2, new java.sql.Timestamp(toTime.getTime()));
 			ResultSet rs = stmt.executeQuery();
@@ -100,7 +128,37 @@ public class CloudDAOjdbc implements CloudDAO {
 		return list;
 	}
 
-	private static final String INSERT = "INSERT INTO Cloud(memberId, fileName, fileType, filePath, fileSize, modifyTime) VALUES (?, ?, ?, ?, ?, ?)";
+	private static final String SELECT_BY_FILENAME_AND_TIME = "SELECT * FROM Cloud WHERE fileName like ? and modifyTime BETWEEN ? AND ?";
+
+	@Override
+	public List<CloudVO> select(String fileName, java.util.Date fromTime, java.util.Date toTime) {
+		List<CloudVO> list = null;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_FILENAME_AND_TIME);) {
+			stmt.setString(1, "%" + fileName + "%");
+			stmt.setTimestamp(2, new java.sql.Timestamp(fromTime.getTime()));
+			stmt.setTimestamp(3, new java.sql.Timestamp(toTime.getTime()));
+			ResultSet rs = stmt.executeQuery();
+			list = new ArrayList<CloudVO>();
+			while (rs.next()) {
+				CloudVO file = new CloudVO();
+				file.setFileId(rs.getInt("fileId"));
+				file.setMemberId(rs.getInt("memberId"));
+				file.setFileName(rs.getString("fileName"));
+				file.setFileType(rs.getString("fileType"));
+				file.setFilePath(rs.getString("filePath"));
+				file.setFileSize(rs.getLong("fileSize"));
+				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				list.add(file);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	private static final String INSERT = "INSERT INTO Cloud(memberId, fileName, fileType, filePath, fileSize) VALUES (?, ?, ?, ?, ?)";
 
 	@Override
 	public int insert(CloudVO file) {
@@ -112,7 +170,6 @@ public class CloudDAOjdbc implements CloudDAO {
 			stmt.setString(3, file.getFileType());
 			stmt.setString(4, file.getFilePath());
 			stmt.setLong(5, file.getFileSize());
-			stmt.setTimestamp(6, new java.sql.Timestamp(file.getModifyTime().getTime()));
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
@@ -121,7 +178,7 @@ public class CloudDAOjdbc implements CloudDAO {
 		return result;
 	}
 
-	private static final String UPDATE = "UPDATE Cloud SET fileName = ?, fileType = ?, filePath = ?, fileSize = ?, modifyTime = ? WHERE fileId = ?";
+	private static final String UPDATE = "UPDATE Cloud SET fileName = ?, fileType = ?, filePath = ?, fileSize = ?, modifyTime = GETUTCDATE() WHERE fileId = ?";
 
 	@Override
 	public int update(CloudVO file) {
@@ -132,8 +189,7 @@ public class CloudDAOjdbc implements CloudDAO {
 			stmt.setString(2, file.getFileType());
 			stmt.setString(3, file.getFilePath());
 			stmt.setLong(4, file.getFileSize());
-			stmt.setTimestamp(5, new java.sql.Timestamp(file.getModifyTime().getTime()));
-			stmt.setInt(6, file.getFileId());
+			stmt.setInt(5, file.getFileId());
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());

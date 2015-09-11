@@ -8,9 +8,13 @@ public interface CloudDAO {
 
 	public List<CloudVO> selectAll();
 
+	public List<CloudVO> selectAll(int memberId);
+
 	public List<CloudVO> select(String fileName);
 
 	public List<CloudVO> select(java.util.Date fromTime, java.util.Date toTime);
+	
+	public List<CloudVO> select(String fileName, java.util.Date fromTime, java.util.Date toTime);
 
 	public int insert(CloudVO file);
 
