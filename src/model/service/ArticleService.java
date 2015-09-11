@@ -16,4 +16,28 @@ public class ArticleService {
 		Collection<ArticleVO> list = null;
 		return list;
 	}
+	
+	public boolean addArticle(){
+		boolean result=false;
+		
+		
+		
+		
+		return result;
+	}
+	
+	/*public boolean modifyArticle(ArticleVO avo) {
+		boolean temp = dao.update(avo);
+		if (temp == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}*/
+
+	public boolean deleteArticle(int memberId, byte channelNo) {
+		return dao.delete(memberId, channelNo);
+	}
+	
+	
 }
