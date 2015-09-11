@@ -17,7 +17,6 @@ public class BlackDAOjdbc implements BlackDAO {
 	private final String PASSWORD = "iTVisgood911";
 
 	private static final String INSERT = "INSERT INTO black VALUES (?,?)";
-
 	@Override
 	public boolean markBlack(int memberId, int blackedId) {
 		boolean markResult = false;
@@ -39,7 +38,6 @@ public class BlackDAOjdbc implements BlackDAO {
 	}
 
 	private static final String GET_LIST = "SELECT blackedId FROM black WHERE memberId=?";
-
 	@Override
 	public List<BlackVO> getList(int memberId) {
 		BlackVO blackMem = null;
@@ -60,7 +58,6 @@ public class BlackDAOjdbc implements BlackDAO {
 	}
 
 	private static final String REMOVE_BLACK = "DELETE FROM black WHERE memberId=? AND blackedId=?";
-
 	@Override
 	public boolean removeBlack(int memberId, int blackedId) {
 		boolean result = false;
@@ -80,7 +77,6 @@ public class BlackDAOjdbc implements BlackDAO {
 
 	// 突然覺得世間充滿大愛，所以將所有曾被設定為黑名單的人都解除
 	private static final String REMOVE_ALL = "DELETE FROM black WHERE memberId=?";
-
 	@Override
 	public boolean removeAll(int memberId) {
 		boolean removeResult = false;

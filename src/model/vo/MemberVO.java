@@ -20,7 +20,14 @@ public class MemberVO {
 	private java.util.Date broadcastTime;
 	private String broadcastDescription;
 	private long broadcastWatchTimes;
+	private boolean suspendMember;
 	
+	public boolean isSuspendMember() {
+		return suspendMember;
+	}
+	public void setSuspendMember(boolean suspendMember) {
+		this.suspendMember = suspendMember;
+	}
 	@Override
 	public String toString() {
 		return memberId + ": " + memberAccount + " " + memberName + " (" + memberNickname + ")";
