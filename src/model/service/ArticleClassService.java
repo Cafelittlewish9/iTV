@@ -1,7 +1,5 @@
 package model.service;
 
-import java.sql.SQLException;
-
 import model.dao.ArticleClassDAO;
 import model.dao.jdbc.ArticleClassDAOjdbc;
 import model.vo.ArticleClassVO;

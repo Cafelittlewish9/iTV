@@ -28,7 +28,7 @@ public class ReportReplyArticleService {
 		return dao.selectAll();
 	}
 	public boolean deleteReplyArticle(ReportReplyArticleVO bean){
-		dao.delete(bean.getReportedReplyArticleId());
+		dao2.delete(bean.getReportedReplyArticleId());
 		dao.delete(bean.getOrderId());
 		
 		return false;
