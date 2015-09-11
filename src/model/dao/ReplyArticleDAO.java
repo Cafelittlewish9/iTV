@@ -14,6 +14,6 @@ public interface ReplyArticleDAO {
 
 	public int update(ReplyArticleVO replyArticle);
 
-	public int delete(ReplyArticleVO replyArticle);
+	public int delete(int replyArticleId);
 
 }

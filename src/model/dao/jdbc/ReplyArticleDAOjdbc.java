@@ -108,11 +108,11 @@ public class ReplyArticleDAOjdbc implements ReplyArticleDAO {
 	private static final String DELETE = "UPDATE ReplyArticle SET replyContent = N'文章已被刪除', modifyTime = GETUTCDATE() WHERE replyArticleId = ?";
 
 	@Override
-	public int delete(ReplyArticleVO replyArticle) {
+	public int delete(int replyArticleId) {
 		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
-			stmt.setInt(1, replyArticle.getReplyArticleId());
+			stmt.setInt(1, replyArticleId);
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
