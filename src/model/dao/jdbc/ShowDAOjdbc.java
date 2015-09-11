@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.dao.ShowDAO;
 import model.vo.ShowVO;
 
@@ -65,8 +64,8 @@ public class ShowDAOjdbc implements ShowDAO {
 	private static final String INSERT = "insert into show(memberId,showTime,website) values (?, ?, ?)";
 
 	@Override
-	public ShowVO insert(ShowVO bean) {
-		ShowVO result = null;
+	public int insert(ShowVO bean) {
+		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
 			if (bean != null) {
@@ -79,10 +78,7 @@ public class ShowDAOjdbc implements ShowDAO {
 					stmt.setDate(2, null);
 				}
 				stmt.setString(3, bean.getWebsite());
-				int i = stmt.executeUpdate();
-				if (i == 1) {
-					result = bean;
-				}
+				result = stmt.executeUpdate();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -93,8 +89,8 @@ public class ShowDAOjdbc implements ShowDAO {
 	private static final String UPDATE = "update show set showTime = ?, website = ? where memberId = ? and showTime = ?";
 
 	@Override
-	public List<ShowVO> update(java.util.Date showTime, String website, int memberId, java.util.Date showTimed) {
-		List<ShowVO> result = null;
+	public int update(java.util.Date showTime, String website, int memberId, java.util.Date showTimed) {
+		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE);) {
 			if (showTime != null) {
@@ -106,10 +102,7 @@ public class ShowDAOjdbc implements ShowDAO {
 			stmt.setString(2, website);
 			stmt.setInt(3, memberId);
 			stmt.setTimestamp(4, new java.sql.Timestamp(showTimed.getTime()));
-			int i = stmt.executeUpdate();
-			if (i == 1) {
-				result = this.select(memberId);
-			}
+			result= stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -168,7 +161,5 @@ public class ShowDAOjdbc implements ShowDAO {
 
 		
 		ShowDAO dao = new ShowDAOjdbc();
-		List<ShowVO> list = dao.update(java.sql.Timestamp.valueOf("2015-10-04 20:30:00"), update.getWebsite(), update.getMemberId(), update.getShowTime());
-		System.out.println("Update : " + list);
 	}
 }

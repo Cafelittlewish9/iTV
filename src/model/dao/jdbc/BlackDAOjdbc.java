@@ -19,14 +19,18 @@ public class BlackDAOjdbc implements BlackDAO {
 	private static final String INSERT = "INSERT INTO black VALUES (?,?)";
 	@Override
 	public boolean markBlack(int memberId, int blackedId) {
+		System.out.println("xxx");
 		boolean markResult = false;
 		int updateCount = 0;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(INSERT);) {
+			System.out.println("zzzz");
 			if (memberId != blackedId) {// 請勿讓白爛使用者有設定自己為黑名單的機會
+				System.out.println("ooo");
 				pstmt.setInt(1, memberId);
 				pstmt.setInt(2, blackedId);
 				updateCount = pstmt.executeUpdate();
+				System.out.println(updateCount);
 				if (updateCount == 1) {
 					markResult = true;
 				}
@@ -43,9 +47,9 @@ public class BlackDAOjdbc implements BlackDAO {
 		BlackVO blackMem = null;
 		List<BlackVO> blacks = new ArrayList<BlackVO>();
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(GET_LIST);
-				ResultSet rs = pstmt.executeQuery();) {
+				PreparedStatement pstmt = conn.prepareStatement(GET_LIST);) {
 			pstmt.setInt(1, memberId);
+			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				blackMem = new BlackVO();
 				blackMem.setBlackedId(rs.getInt("blackedId"));

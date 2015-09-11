@@ -8,9 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.dao.ReportReplyArticleDAO;
 import model.vo.ReportReplyArticleVO;
 
-public class ReportReplyArticleDAOjdbc {
+public class ReportReplyArticleDAOjdbc implements ReportReplyArticleDAO {
 
 	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
 	private static final String USER = "iTVSoCool@y56pcc16br";
@@ -18,6 +19,7 @@ public class ReportReplyArticleDAOjdbc {
 
 	private static final String SELECT_ALL = "SELECT * FROM ReportReplyArticle";
 
+	@Override
 	public List<ReportReplyArticleVO> selectAll() {
 		List<ReportReplyArticleVO> list = null;
 		ReportReplyArticleVO reportReplyArticle = null;
@@ -51,6 +53,7 @@ public class ReportReplyArticleDAOjdbc {
 
 	private static final String INSERT = "INSERT INTO ReportReplyArticle(reportedReplyArticleId, reportReason) VALUES(?, ?)";
 
+	@Override
 	public boolean insert(ReportReplyArticleVO reportReplyArticle) {
 		Connection conn = null;
 		boolean result = false;
@@ -79,13 +82,14 @@ public class ReportReplyArticleDAOjdbc {
 
 	private static final String DELETE = "DELETE FROM ReportReplyArticle WHERE orderId = ?";
 
-	public boolean delete(int reportReplyArticle) {
+	@Override
+	public boolean delete(int orderId) {
 		Connection conn = null;
 		boolean result = false;
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			PreparedStatement pstmt = conn.prepareStatement(DELETE);
-			pstmt.setInt(1, reportReplyArticle);
+			pstmt.setInt(1, orderId);
 			int demo = pstmt.executeUpdate();
 			if (demo == 1) {
 				result = true;
@@ -105,7 +109,7 @@ public class ReportReplyArticleDAOjdbc {
 	}
 
 	public static void main(String[] args) {
-		ReportReplyArticleDAOjdbc dao = new ReportReplyArticleDAOjdbc();
+		ReportReplyArticleDAO dao = new ReportReplyArticleDAOjdbc();
 		// INSERT
 		ReportReplyArticleVO temp1 = new ReportReplyArticleVO();
 		temp1.setOrderId(11);
