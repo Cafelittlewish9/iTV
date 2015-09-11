@@ -21,21 +21,19 @@ public class ChannelService {
 		bean.setMemberId(memberId);
 		bean.setChannelNo(channelNo);
 		bean.setBroadcastWebsite(broadcastWebsite);
-		int temp = dao.insert(bean);
-		if (temp == 1) {
+		int result = dao.insert(bean);
+		if (result == 1) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public boolean changeChannel(String broadcastWebsite, int memberId, byte channelNo) {
-		int temp = dao.update(broadcastWebsite, memberId, channelNo);
-		if (temp == 1) {
+		int result = dao.update(broadcastWebsite, memberId, channelNo);
+		if (result == 1) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public boolean removeChannel(int memberId, byte channelNo) {

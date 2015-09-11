@@ -18,6 +18,6 @@ public interface ArticleDAO {
 
 	public boolean update(ArticleVO article);
 
-	public boolean delete(int articleId, int memberId);
+	public boolean delete(int articleId);
 
 }

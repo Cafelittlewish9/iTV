@@ -12,14 +12,30 @@ import model.dao.ArticleDAO;
 import model.vo.ArticleVO;
 
 public class ArticleDAOjdbc implements ArticleDAO {
-	 private final String URL =
-	 "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	 private final String USERNAME = "iTVSoCool";//iTVSoCool@y56pcc16br
-	 private final String PASSWORD = "iTVisgood911";
+	@Override
+	public List<ArticleVO> selectAll(String subclassNo) {
+		return null;
+	}
+
+	@Override
+	public List<ArticleVO> select(String articleTitle) {
+		return null;
+	}
+
+	@Override
+	public List<ArticleVO> select(int memberId) {
+		return null;
+	}
+
+	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
+	private final String USERNAME = "iTVSoCool";// iTVSoCool@y56pcc16br
+	private final String PASSWORD = "iTVisgood911";
 
 	private static final String SELECT_ALL = "SELECT articleId,memberId,subclassNo,articleTitle,articleContent,publishTime,modifyTime,watchTimes FROM article";
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see model.dao.jdbc.ArticleDAO#selectAll()
 	 */
 	@Override
@@ -50,9 +66,6 @@ public class ArticleDAOjdbc implements ArticleDAO {
 
 	private static final String INSERT = "INSERT INTO Article (memberId, subclassNo,articleTitle,articleContent) VALUES (?,?,?,?)";
 
-	/* (non-Javadoc)
-	 * @see model.dao.jdbc.ArticleDAO#insert(model.vo.ArticleVO)
-	 */
 	@Override
 	public boolean insert(ArticleVO article) {
 		boolean result = false;
@@ -75,9 +88,6 @@ public class ArticleDAOjdbc implements ArticleDAO {
 	// 必須是發文的作者本人才能修改該篇文章
 	private static final String UPDATE = "UPDATE Article SET subclassNo=?,articleTitle=?,articleContent=?,modifyTime=?WHERE articleId=? AND memberId=?";
 
-	/* (non-Javadoc)
-	 * @see model.dao.jdbc.ArticleDAO#update(model.vo.ArticleVO)
-	 */
 	@Override
 	public boolean update(ArticleVO article) {
 		boolean result = false;
@@ -102,18 +112,14 @@ public class ArticleDAOjdbc implements ArticleDAO {
 	}
 
 	// 同理，必須是發文的作者本人才能刪除該篇文章
-	private static final String DELETE = "DELETE FROM article WHERE articleId=? AND memberId=?";
+	private static final String DELETE = "UPDATE Article SET memberId = NULL, articleContent = N'文章已被刪除', modifyTime = GETUTCDATE() WHERE articleId = ?";
 
-	/* (non-Javadoc)
-	 * @see model.dao.jdbc.ArticleDAO#delete(int, int)
-	 */
 	@Override
-	public boolean delete(int articleId, int memberId) {
+	public boolean delete(int articleId) {
 		boolean result = false;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(DELETE);) {
 			pstmt.setInt(1, articleId);
-			pstmt.setInt(2, memberId);
 			int updateCount = pstmt.executeUpdate();
 			if (updateCount == 1) {
 				result = true;
