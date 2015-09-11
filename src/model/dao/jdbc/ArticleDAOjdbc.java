@@ -16,8 +16,8 @@ public class ArticleDAOjdbc implements ArticleDAO {
 	private final String USERNAME = "iTVSoCool";// iTVSoCool@y56pcc16br
 	private final String PASSWORD = "iTVisgood911";
 
-	private static final String SELECT_ALL = "SELECT articleId,memberId,subclassNo,articleTitle,articleContent,publishTime,modifyTime,watchTimes FROM article";
-
+	private static final String SELECT_ALL = 
+			"SELECT articleId,memberId,subclassNo,articleTitle,articleContent,publishTime,modifyTime,watchTimes FROM article";
 	@Override
 	public List<ArticleVO> selectAll() {
 		ArticleVO avo;
@@ -44,35 +44,7 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		return avos;
 	}
 
-	private static final String SEARCH_BY_CLASS1 = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
-			+ "FROM article a join member m ON a.memberid = m.memberid WHERE memberaccount like '%'+?+'%' AND subclassNo = ? ORDER BY modifytime";
-
-	public List<ArticleVO> selectAll(String memberacc, String subclassNo) {
-		ArticleVO avo = new ArticleVO();
-		List<ArticleVO> avos = null;
-		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(SEARCH_BY_CLASS1);) {
-			pstmt.setString(1, subclassNo);
-			ResultSet rs = pstmt.executeQuery();
-			avos = new ArrayList<ArticleVO>();
-			while (rs.next()) {
-				avo = new ArticleVO();
-				avo.setArticleId(rs.getInt("articleId"));
-				avo.setMemberId(rs.getInt("memberId"));
-				avo.setSubclassNo(rs.getString("subclassNo"));
-				avo.setArticleTitle(rs.getString("articleTitle"));
-				avo.setArticleContent(rs.getString("articleContent"));
-				avo.setPublishTime(rs.getTimestamp("publishTime"));
-				avo.setModifyTime(rs.getTimestamp("modifyTime"));
-				avo.setWatchTimes(rs.getLong("watchTimes"));
-				avos.add(avo);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return avos;
-	}
-
+	
 	private static final String SEARCH_BY_CLASS = "SELECT * FROM article WHERE subclassNo =?";
 
 	@Override
@@ -101,11 +73,10 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		}
 		return avos;
 	}
-
+	
 	private static final String SEARCH_BY_TITLE = "SELECT * FROM article WHERE articleTitle like ?";
-
 	@Override
-	public List<ArticleVO> select(String articleTitle) {
+	public List<ArticleVO> select(String... articleTitle) {
 		ArticleVO avo = new ArticleVO();
 		List<ArticleVO> avos = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -131,10 +102,39 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		return avos;
 	}
 
+	private static final String SEARCH_BY_CLASS1 = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
+			+ "FROM article a join member m ON a.memberid = m.memberid WHERE memberaccount like '%'+?+'%' AND subclassNo = ? ORDER BY modifytime";
+	@Override
+	public List<ArticleVO> selectAll(String memberacc, String subclassNo) {
+		ArticleVO avo = new ArticleVO();
+		List<ArticleVO> avos = null;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement pstmt = conn.prepareStatement(SEARCH_BY_CLASS1);) {
+			pstmt.setString(1, subclassNo);
+			ResultSet rs = pstmt.executeQuery();
+			avos = new ArrayList<ArticleVO>();
+			while (rs.next()) {
+				avo = new ArticleVO();
+				avo.setArticleId(rs.getInt("articleId"));
+				avo.setMemberId(rs.getInt("memberId"));
+				avo.setSubclassNo(rs.getString("subclassNo"));
+				avo.setArticleTitle(rs.getString("articleTitle"));
+				avo.setArticleContent(rs.getString("articleContent"));
+				avo.setPublishTime(rs.getTimestamp("publishTime"));
+				avo.setModifyTime(rs.getTimestamp("modifyTime"));
+				avo.setWatchTimes(rs.getLong("watchTimes"));
+				avos.add(avo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return avos;
+	}
+	
 	private static final String SEARCH_BY_MEMBERID2 = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
 			+ "FROM article a JOIN member m ON a.memberid = m.memberid WHERE memberaccount like '%'+?+'%' ORDER BY modifytime";
-
-	public List<ArticleVO> selectByMemacc(String memberacc) {
+	@Override
+	public List<ArticleVO> select(String memberacc) {
 		ArticleVO avo = new ArticleVO();
 		List<ArticleVO> avos = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -160,7 +160,6 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		return avos;
 	}
 
-	// getUTCdate
 	private static final String SEARCH_BY_MEMBERID = "SELECT * FROM article WHERE memberId like '%' + ? + '%'";
 
 	@Override
@@ -271,6 +270,7 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		// avo.setArticleContent("I hate the world");
 		// System.out.println(temp.insert(avo));
 		// System.out.println(temp.update(avo));
+		// getUTCdate
 
 	}
 }

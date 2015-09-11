@@ -10,9 +10,13 @@ public interface ArticleDAO {
 
 	public List<ArticleVO> selectAll(String subclassNo);
 
-	public List<ArticleVO> select(String articleTitle);
+	public List<ArticleVO> selectAll(String memberacc, String subclassNo);
+	
+	public List<ArticleVO> select(String... articleTitle);
 
-	public List<ArticleVO> select(int memberId);
+	public List<ArticleVO> select(String memberacc);
+	
+	public List<ArticleVO> select(int memberId);	
 
 	public boolean insert(ArticleVO article);
 

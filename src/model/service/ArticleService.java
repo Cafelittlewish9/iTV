@@ -12,11 +12,31 @@ public class ArticleService {
 		this.dao = new ArticleDAOjdbc();
 	}
 
-	public Collection<ArticleVO> article() {
-		Collection<ArticleVO> list = null;
-		return list;
+	//顯示文章列表
+	public Collection<ArticleVO> allArticle() {		
+		return dao.selectAll();
 	}
 	
+	//依分類顯示該類別文章列表
+	//（是否需要要能從subclassNo抓出subclassName？←不用，前端select的option可以處理）
+	public Collection<ArticleVO> allSubArticle(String subclassNo){
+		return dao.selectAll(subclassNo);
+	}	
+	
+	//依文章名稱與發文帳號搜尋文章
+	//我本來以為會送keyword去兩個DAO的方法看哪個有結果再傳回來給我，卻感覺是我想太多了
+	public Collection<ArticleVO> searchArticle(String keyword){		
+		return dao.select(keyword);
+	}
+	
+	//依發文時間搜尋文章，DAO跟jdbc沒有這個方法
+	public Collection<ArticleVO> searchArticle(java.util.Date fromTime,java.util.Date toTime){
+		Collection<ArticleVO> result=null;
+		
+		return result;
+	}
+		
+	//增加文章
 	public boolean addArticle(){
 		boolean result=false;
 		
@@ -26,18 +46,35 @@ public class ArticleService {
 		return result;
 	}
 	
-	/*public boolean modifyArticle(ArticleVO avo) {
+	//修改文章
+	public boolean modifyArticle(ArticleVO avo) {
 		boolean temp = dao.update(avo);
-		if (temp == 1) {
+		if (temp == true) {
 			return true;
 		} else {
 			return false;
 		}
-	}*/
-
-	public boolean deleteArticle(int memberId, byte channelNo) {
-		return dao.delete(memberId, channelNo);
 	}
-	
-	
+
+	//刪除文章
+	public boolean deleteArticle(int memberId, int articleId) {
+		
+		dao.select(memberId);
+		
+		return dao.delete(articleId);	
+	}	
+
+	//測試程式
+	public static void main(String[] args) {
+		ArticleService service = new ArticleService();
+//		System.out.println(service.allArticle());
+//		System.out.println(service.allSubArticle("M"));
+		System.out.println(service.searchArticle("a"));
+//		System.out.println(service.addArticle());
+//		System.out.println(service.deleteArticle(4, 10));
+		
+	}	
 }
+	
+	
+
