@@ -3,11 +3,16 @@ package model.service;
 import java.util.Collection;
 
 import model.dao.LoginDAO;
+import model.dao.jdbc.LoginDAOjdbc;
 import model.vo.LoginVO;
 
 public class LoginService {
 	private LoginDAO dao;
 
+	public LoginService(){
+		this.dao=new LoginDAOjdbc();
+	}
+	
 	public Collection<LoginVO> loginLog(String memberAccount) {
 		return dao.selectAll(memberAccount);
 	}

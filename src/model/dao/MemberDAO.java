@@ -1,13 +1,12 @@
 package model.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import model.vo.MemberVO;
 
 public interface MemberDAO {
 
-	int insert(MemberVO member) throws SQLException;
+	int insert(MemberVO member) ;
 
 	int insert2(MemberVO member);
 
@@ -20,5 +19,9 @@ public interface MemberDAO {
 	List<MemberVO> selectAll();
 
 	MemberVO findByPK(int memberId);
+
+	int switchSuspend(String memberAccount, boolean suspendRight);
+	
+	
 
 }

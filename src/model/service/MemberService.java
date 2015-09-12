@@ -11,7 +11,12 @@ import model.vo.MemberVO;
 //註冊後轉update頁面要由controller處理
 //查詢、修改個人資料、搜尋會員
 public class MemberService {
-	private MemberDAO memberDao = new MemberDAOjdbc();
+	private MemberDAO dao;
+	
+	public MemberService(){
+		this.dao=new MemberDAOjdbc();
+	}
+	
 	
 	//registry1採帳號密碼信箱註冊；registry2是採信箱密碼註冊
 	public String registry1(String username,String password,String usermail)throws SQLException{
@@ -20,14 +25,14 @@ public class MemberService {
 		if (username.length()==0){
 			result="Please keyin a username.";
 		}else{
-			if (memberDao.getId(username)!=0)  {		
+			if (dao.getId(username)!=0)  {		
 				result="Please change another username.";
 			}else{
 				mvo.setMemberAccount(username);
 				mvo.setMemberPassword(password.getBytes());
 				mvo.setMemberEmail(usermail);
 //				mvo.setMemberRegisterTime(new java.util.Date());	
-				memberDao.insert(mvo);
+				dao.insert(mvo);
 				result="success";
 			}				
 		}
@@ -41,13 +46,13 @@ public class MemberService {
 		if (usermail.length()==0){
 			result="Please keyin a your mail.";
 		}else{
-			if (memberDao.getId(usermail.substring(0,usermail.indexOf("@")))!=0)  {		
+			if (dao.getId(usermail.substring(0,usermail.indexOf("@")))!=0)  {		
 				result="Please change another mail address to login.";
 			}else{
 				mvo.setMemberAccount(usermail.substring(0,usermail.indexOf("@")));
 				mvo.setMemberPassword(password.getBytes());
 //				mvo.setMemberRegisterTime(new java.util.Date());	
-				memberDao.insert(mvo);
+				dao.insert(mvo);
 				result="success";
 			}				
 		}
@@ -55,14 +60,14 @@ public class MemberService {
 	}
 	//login1是採用帳號登入；login2是採信箱登入
 	public MemberVO login1(String username, String password) {		
-		int memberId = memberDao.getId(username);
-		MemberVO mvo=memberDao.findByPK(memberId);
+		int memberId = dao.getId(username);
+		MemberVO mvo=dao.findByPK(memberId);
 		if(mvo!=null) {
 			if(password!=null && password.length()!=0) {
 				byte[] memberPwd=mvo.getMemberPassword();
 				byte[] temp = password.getBytes();
 				if(Arrays.equals(memberPwd, temp)) {
-					mvo=memberDao.findByPK(memberId);
+					mvo=dao.findByPK(memberId);
 					return mvo;					
 				}
 			}
@@ -71,14 +76,14 @@ public class MemberService {
 	}
 	//login1是採用帳號登入；login2是採信箱登入
 	public MemberVO login2(String usermail, String password) {		
-		int memberId = memberDao.getId(usermail.substring(0,usermail.indexOf("@")));
-		MemberVO mvo=memberDao.findByPK(memberId);
+		int memberId = dao.getId(usermail.substring(0,usermail.indexOf("@")));
+		MemberVO mvo=dao.findByPK(memberId);
 		if(mvo!=null) {
 			if(password!=null && password.length()!=0) {
 				byte[] memberPwd=mvo.getMemberPassword();
 				byte[] temp = password.getBytes();
 				if(Arrays.equals(memberPwd, temp)) {
-					mvo=memberDao.findByPK(memberId);
+					mvo=dao.findByPK(memberId);
 					return mvo;				
 				}
 			}
@@ -92,7 +97,7 @@ public class MemberService {
 		if(mvo!=null) {
 			byte[] temp = newPassword.getBytes();
 			mvo.setMemberPassword(temp);
-			if (memberDao.update(mvo)==1) {
+			if (dao.update(mvo)==1) {
 				result="You've successfully changed your password!";
 			}								
 		}	
@@ -102,7 +107,7 @@ public class MemberService {
 	//用戶忘記密碼
 	public String retrivePwd(String usermail){
 		String result=null;		
-		if (memberDao.getId(usermail.substring(0,usermail.indexOf("@")))!=0){
+		if (dao.getId(usermail.substring(0,usermail.indexOf("@")))!=0){
 			double replace=Math.random()*100;//亂數產生一組數字去轉成md5回傳給使用者
 			MemberVO mvo=new MemberVO();
 			MemberService service=new MemberService();

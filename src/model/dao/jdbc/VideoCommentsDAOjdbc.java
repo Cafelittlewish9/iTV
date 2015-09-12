@@ -17,7 +17,7 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 	private final String PASSWORD = "iTVisgood911";
 
 	private static final String SELECT_ALL = 
-			"SELECT commentId,memberId,videoId,commentContent,commentTime FROM vidoeComments";
+			"SELECT commentId,memberId,videoId,commentContent,commentTime FROM videoComments";
 	/* (non-Javadoc)
 	 * @see model.dao.jdbc.VideoCommentsDAO#selectAll()
 	 */
@@ -44,7 +44,7 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 	}
 
 	private static final String INSERT = 
-			"INSERT INTO vidoeComments (memberId,videoId,commentContent) VALUES (?,?,?)";
+			"INSERT INTO videoComments (memberId,videoId,commentContent) VALUES (?,?,?)";
 	/* (non-Javadoc)
 	 * @see model.dao.jdbc.VideoCommentsDAO#insert(model.vo.VideoCommentsVO)
 	 */
@@ -68,7 +68,7 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 	}
 
 	private static final String UPDATE =
-			"UPDATE vidoeComments SET commentContent=?,commentTime=? WHERE commentId=?";	
+			"UPDATE videoComments SET commentContent=?,commentTime=? WHERE commentId=?";	
 	/* (non-Javadoc)
 	 * @see model.dao.jdbc.VideoCommentsDAO#update(model.vo.VideoCommentsVO)
 	 */
@@ -91,7 +91,7 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 		return result;		
 	}
 
-	private static final String DELETE = "DELETE FROM vidoeComments WHERE commentId=?";
+	private static final String DELETE = "DELETE FROM videoComments WHERE commentId=?";
 	/* (non-Javadoc)
 	 * @see model.dao.jdbc.VideoCommentsDAO#delete(int)
 	 */

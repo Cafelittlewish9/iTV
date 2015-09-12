@@ -20,7 +20,7 @@ public class MemberDAOjdbc implements MemberDAO {
 	private static final String INSERT = "INSERT INTO member (memberAccount,memberPassword,memberEmail,broadcastWebsite) VALUES (?, cast( ? as varbinary(50)), ?,?)";
 
 	@Override
-	public int insert(MemberVO member) throws SQLException {
+	public int insert(MemberVO member) {
 		// 要先檢查bean是否為null
 		int updateCount = 0;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -62,14 +62,14 @@ public class MemberDAOjdbc implements MemberDAO {
 		return updateCount;
 	}
 
-	private static final String SELECT_ALL_MEMBER = "SELECT memberId,memberAccount, broadcastWebsite FROM member ORDER BY memberAccount";
+	private static final String GET_MEMBER_LIST = "SELECT memberId,memberAccount, broadcastWebsite FROM member ORDER BY memberAccount";
 
 	@Override
 	public List<MemberVO> getMemberList() {
 		List<MemberVO> members = null;
 		MemberVO member = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_MEMBER);
+				PreparedStatement pstmt = conn.prepareStatement(GET_MEMBER_LIST);
 				ResultSet rs = pstmt.executeQuery();) {
 			members = new ArrayList<MemberVO>();
 			while (rs.next()) {
@@ -104,7 +104,7 @@ public class MemberDAOjdbc implements MemberDAO {
 	}
 
 	// 新增
-	private static final String UPDATE_INFO = "UPDATE member SET memberPassword=?, memberEmail=?, memberFB=?, memberGoogle=?, memberTwitter=?, memberNickname=?,"
+	private static final String UPDATE = "UPDATE member SET memberPassword=?, memberEmail=?, memberFB=?, memberGoogle=?, memberTwitter=?, memberNickname=?,"
 			+ "memberBirthday=?,memberPhoto=?,memberSelfIntroduction=?,broadcastTitle=?,broadcastClassName=?,"
 			+ "broadcastTime=?,broadcastDescription=? WHERE memberId=?";
 
@@ -113,7 +113,7 @@ public class MemberDAOjdbc implements MemberDAO {
 		// 要先檢查bean是否為null
 		int updateCount = 0;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(UPDATE_INFO);) {
+				PreparedStatement pstmt = conn.prepareStatement(UPDATE);) {
 			pstmt.setBytes(1, member.getMemberPassword());
 			pstmt.setString(2, member.getMemberEmail());
 			pstmt.setString(3, member.getMemberFB());
@@ -176,7 +176,7 @@ public class MemberDAOjdbc implements MemberDAO {
 		return list;
 	}
 
-	private static final String SELECT_BY_ID = "SELECT memberId,memberAccount,memberEmail,memberFB,memberGoogle,memberTwitter,memberName,"
+	private static final String FIND_BY_PK = "SELECT memberId,memberAccount,memberEmail,memberFB,memberGoogle,memberTwitter,memberName,"
 			+ "memberNickname,memberBirthday,memberPhoto,memberRegisterTime,memberSelfIntroduction,"
 			+ "broadcastWebsite,broadcastTitle,broadcastClassName,broadcastTime,broadcastDescription,"
 			+ "broadcastWatchTimes FROM member WHERE memberId=?";
@@ -184,7 +184,7 @@ public class MemberDAOjdbc implements MemberDAO {
 	public MemberVO findByPK(int memberId) {
 		MemberVO member = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(SELECT_BY_ID);) {
+				PreparedStatement pstmt = conn.prepareStatement(FIND_BY_PK);) {
 			pstmt.setInt(1, memberId);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -215,11 +215,12 @@ public class MemberDAOjdbc implements MemberDAO {
 	}
 
 	// 設定用戶是否被停權
-	private static final String UPDATE_SUSPEND="UPDATE member SET suspendMember=? WHERE memberAccount=?";
+	private static final String SWITCH_SUSPEND="UPDATE member SET suspendMember=? WHERE memberAccount=?";
+	@Override
 	public int switchSuspend(String memberAccount, boolean suspendRight) {
 		int result=0;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(UPDATE_SUSPEND);) {
+				PreparedStatement pstmt = conn.prepareStatement(SWITCH_SUSPEND);) {
 			pstmt.setBoolean(1, suspendRight);
 			pstmt.setString(2, memberAccount);
 			result=pstmt.executeUpdate();			
