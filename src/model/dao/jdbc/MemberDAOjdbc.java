@@ -11,11 +11,12 @@ import java.util.List;
 
 import model.dao.MemberDAO;
 import model.vo.MemberVO;
+import util.GC;
 
 public class MemberDAOjdbc implements MemberDAO {
-	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private final String USERNAME = "iTVSoCool";// iTVSoCool@y56pcc16br
-	private final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 	// DB會員註冊的時間是抓格林威治時間
 	private static final String INSERT = "INSERT INTO member (memberAccount,memberPassword,memberEmail,broadcastWebsite) VALUES (?, cast( ? as varbinary(50)), ?,?)";
 

@@ -10,11 +10,12 @@ import java.util.List;
 
 import model.dao.FollowDAO;
 import model.vo.FollowVO;
+import util.GC;
 
 public class FollowDAOjdbc implements FollowDAO {
-	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private static final String USER = "iTVSoCool@y56pcc16br";
-	private static final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_BY_MEMBERID = "SELECT * FROM Follow WHERE memberId=?";
 
@@ -22,7 +23,7 @@ public class FollowDAOjdbc implements FollowDAO {
 	public List<FollowVO> selectAll(int memberId) {
 		List<FollowVO> list = null;
 		FollowVO follow = null;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_MEMBERID);) {
 			stmt.setInt(1, memberId);
 			ResultSet rset = stmt.executeQuery();
@@ -50,7 +51,7 @@ public class FollowDAOjdbc implements FollowDAO {
 		ResultSet rset = null;
 
 		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 			stmt = conn.prepareStatement(SELECT_ALL);
 			rset = stmt.executeQuery();
 
@@ -80,7 +81,7 @@ public class FollowDAOjdbc implements FollowDAO {
 	@Override
 	public int insert(FollowVO bean) {
 		int result = -1;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
 			if (bean != null) {
 				stmt.setInt(1, bean.getMemberId());
@@ -97,7 +98,7 @@ public class FollowDAOjdbc implements FollowDAO {
 
 	@Override
 	public boolean delete(int followId, int memberId) {
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
 			stmt.setInt(1, followId);
 			stmt.setInt(2, memberId);

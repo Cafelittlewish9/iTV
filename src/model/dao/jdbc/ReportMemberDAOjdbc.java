@@ -10,11 +10,12 @@ import java.util.List;
 
 import model.dao.ReportMemberDAO;
 import model.vo.ReportMemberVO;
+import util.GC;
 
 public class ReportMemberDAOjdbc implements ReportMemberDAO {
-	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private static final String USER = "iTVSoCool@y56pcc16br";
-	private static final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_BY_ID = "select * from ReportMember where reportedMemberId = ?";
 
@@ -22,7 +23,7 @@ public class ReportMemberDAOjdbc implements ReportMemberDAO {
 	public List<ReportMemberVO> select(int reportedMemberId) {
 		List<ReportMemberVO> list = null;
 		ReportMemberVO result = null;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_ID);) {
 			stmt.setInt(1, reportedMemberId);
 			ResultSet rest = stmt.executeQuery();
@@ -46,7 +47,7 @@ public class ReportMemberDAOjdbc implements ReportMemberDAO {
 	@Override
 	public List<ReportMemberVO> selectAll() {
 		List<ReportMemberVO> result = null;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_ALL);
 				ResultSet rset = stmt.executeQuery();) {
 			result = new ArrayList<ReportMemberVO>();
@@ -69,7 +70,7 @@ public class ReportMemberDAOjdbc implements ReportMemberDAO {
 	@Override
 	public ReportMemberVO insert(ReportMemberVO bean) {
 		ReportMemberVO result = null;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
 			if (bean != null) {
 				stmt.setInt(1, bean.getReportedMemberId());
@@ -137,7 +138,7 @@ public class ReportMemberDAOjdbc implements ReportMemberDAO {
 	 */
 	@Override
 	public boolean delete(int orderId) {
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(DELETE);) {
 			stmt.setInt(1, orderId);
 			int i = stmt.executeUpdate();

@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.ShowDAO;
 import model.vo.ShowVO;
+import util.GC;
 
 public class ShowDAOjdbc implements ShowDAO {
-	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private static final String USERNAME = "iTVSoCool@y56pcc16br";
-	private static final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_BY_ID = "select * from show where memberId = ?";
 

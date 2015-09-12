@@ -10,12 +10,12 @@ import java.util.List;
 
 import model.dao.ReportReplyArticleDAO;
 import model.vo.ReportReplyArticleVO;
+import util.GC;
 
 public class ReportReplyArticleDAOjdbc implements ReportReplyArticleDAO {
-
-	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private static final String USER = "iTVSoCool@y56pcc16br";
-	private static final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_ALL = "SELECT * FROM ReportReplyArticle";
 
@@ -25,7 +25,7 @@ public class ReportReplyArticleDAOjdbc implements ReportReplyArticleDAO {
 		ReportReplyArticleVO reportReplyArticle = null;
 		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 			PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL);
 			ResultSet rs = pstmt.executeQuery();
 			list = new ArrayList<ReportReplyArticleVO>();
@@ -58,7 +58,7 @@ public class ReportReplyArticleDAOjdbc implements ReportReplyArticleDAO {
 		Connection conn = null;
 		boolean result = false;
 		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 			PreparedStatement pstmt = conn.prepareStatement(INSERT);
 			pstmt.setInt(1, reportReplyArticle.getReportedReplyArticleId());
 			pstmt.setString(2, reportReplyArticle.getReportReason());
@@ -87,7 +87,7 @@ public class ReportReplyArticleDAOjdbc implements ReportReplyArticleDAO {
 		Connection conn = null;
 		boolean result = false;
 		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 			PreparedStatement pstmt = conn.prepareStatement(DELETE);
 			pstmt.setInt(1, orderId);
 			int demo = pstmt.executeUpdate();

@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.LoginDAO;
 import model.vo.LoginVO;
+import util.GC;
 
 public class LoginDAOjdbc implements LoginDAO {
-	private static final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private static final String USER = "iTVSoCool@y56pcc16br";
-	private static final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_BY_MEMBERACCOUNT = "select * from Login where memberAccount = ?";
 
@@ -21,7 +22,7 @@ public class LoginDAOjdbc implements LoginDAO {
 	public List<LoginVO> selectAll(String memberAccount) {
 		LoginVO bean = null;
 		List<LoginVO> list = null;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_MEMBERACCOUNT);) {
 			stmt.setString(1, memberAccount);
 			ResultSet rset = stmt.executeQuery();
@@ -44,7 +45,7 @@ public class LoginDAOjdbc implements LoginDAO {
 	@Override
 	public List<LoginVO> selectAll() {
 		List<LoginVO> result = null;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_ALL);
 				ResultSet rset = stmt.executeQuery();) {
 			result = new ArrayList<LoginVO>();
@@ -66,7 +67,7 @@ public class LoginDAOjdbc implements LoginDAO {
 	@Override
 	public LoginVO select(String memberAccount) {
 		LoginVO bean = null;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_LAST_TIME);) {
 			stmt.setString(1, memberAccount);
 			ResultSet rset = stmt.executeQuery();
@@ -87,7 +88,7 @@ public class LoginDAOjdbc implements LoginDAO {
 	@Override
 	public LoginVO insert(LoginVO bean) {
 		LoginVO result = null;
-		try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(INSERT);) {
 			if (bean != null) {
 				stmt.setString(1, bean.getIp());

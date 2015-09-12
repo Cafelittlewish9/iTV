@@ -10,11 +10,12 @@ import java.util.List;
 
 import model.dao.VideoDAO;
 import model.vo.VideoVO;
+import util.GC;
 
 public class VideoDAOjdbc implements VideoDAO {
-	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private final String USERNAME = "iTVSoCool@y56pcc16br";
-	private final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_BY_ID = "select * from video where videoTitle like ?";
 

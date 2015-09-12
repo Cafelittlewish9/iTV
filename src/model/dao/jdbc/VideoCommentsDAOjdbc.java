@@ -10,17 +10,15 @@ import java.util.List;
 
 import model.dao.VideoCommentsDAO;
 import model.vo.VideoCommentsVO;
+import util.GC;
 
 public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
-	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private final String USERNAME = "iTVSoCool@y56pcc16br";
-	private final String PASSWORD = "iTVisgood911";
-
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
+	
 	private static final String SELECT_ALL = 
 			"SELECT commentId,memberId,videoId,commentContent,commentTime FROM videoComments";
-	/* (non-Javadoc)
-	 * @see model.dao.jdbc.VideoCommentsDAO#selectAll()
-	 */
 	@Override
 	public List<VideoCommentsVO> selectAll() {
 		VideoCommentsVO vcvo = new VideoCommentsVO();
@@ -45,9 +43,6 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 
 	private static final String INSERT = 
 			"INSERT INTO videoComments (memberId,videoId,commentContent) VALUES (?,?,?)";
-	/* (non-Javadoc)
-	 * @see model.dao.jdbc.VideoCommentsDAO#insert(model.vo.VideoCommentsVO)
-	 */
 	@Override
 	public boolean insert(VideoCommentsVO videoComments) {
 		boolean result = false;
@@ -69,9 +64,6 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 
 	private static final String UPDATE =
 			"UPDATE videoComments SET commentContent=?,commentTime=? WHERE commentId=?";	
-	/* (non-Javadoc)
-	 * @see model.dao.jdbc.VideoCommentsDAO#update(model.vo.VideoCommentsVO)
-	 */
 	@Override
 	public boolean update(VideoCommentsVO videoComments) {
 		boolean result = false;
@@ -92,9 +84,6 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 	}
 
 	private static final String DELETE = "DELETE FROM videoComments WHERE commentId=?";
-	/* (non-Javadoc)
-	 * @see model.dao.jdbc.VideoCommentsDAO#delete(int)
-	 */
 	@Override
 	public boolean delete(int commentId) {
 		boolean removeResult = false;

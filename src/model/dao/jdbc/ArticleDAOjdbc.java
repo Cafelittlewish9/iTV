@@ -10,11 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.ArticleDAO;
 import model.vo.ArticleVO;
+import util.GC;
 
 public class ArticleDAOjdbc implements ArticleDAO {
-	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private final String USERNAME = "iTVSoCool";// iTVSoCool@y56pcc16br
-	private final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_ALL = 
 			"SELECT articleId,memberId,subclassNo,articleTitle,articleContent,publishTime,modifyTime,watchTimes FROM article";

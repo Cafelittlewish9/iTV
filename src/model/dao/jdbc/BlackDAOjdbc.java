@@ -10,11 +10,12 @@ import java.util.List;
 
 import model.dao.BlackDAO;
 import model.vo.BlackVO;
+import util.GC;
 
 public class BlackDAOjdbc implements BlackDAO {
-	private final String URL = "jdbc:sqlserver://y56pcc16br.database.windows.net:1433;database=iTV";
-	private final String USERNAME = "iTVSoCool@y56pcc16br";
-	private final String PASSWORD = "iTVisgood911";
+	private static final String URL = GC.URL;
+	private static final String USERNAME = GC.USERNAME;
+	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String MARK_BLACK = "INSERT INTO black VALUES (?,?)";
 	@Override
