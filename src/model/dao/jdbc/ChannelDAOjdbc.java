@@ -20,7 +20,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String SELECT_BY_ID_CHANNELNO = "select * from channel where memberId=? and channelNo=?";
 
 	@Override
-	public ChannelVO select(int memberId, int channelNo) {
+	public ChannelVO selectByChannelNo(int memberId, int channelNo) {
 		ChannelVO result = null;
 		ResultSet rset = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -44,7 +44,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String SELECT_BY_ID = "select * from channel where memberId = ?";
 
 	@Override
-	public List<ChannelVO> selectAll(int memberId) {
+	public List<ChannelVO> selectByMemberId(int memberId) {
 		List<ChannelVO> list = null;
 		ChannelVO result = null;
 		ResultSet rset = null;
@@ -127,6 +127,21 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		}
 		return result;
 	}
+	@Override
+	public int update(ChannelVO bean) {
+		int result = -1;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(UPDATE);) {
+			stmt.setString(1, bean.getBroadcastWebsite());
+			stmt.setInt(2, bean.getMemberId());
+			stmt.setInt(3, bean.getChannelNo());
+			result = stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	private static final String DELETE = "delete from channel where memberId=? and channelNo=?";
 
@@ -145,11 +160,28 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		}
 		return false;
 	}
+	
+	private static final String DELETE_ALL = "delete from channel where memberId = ?";
+
+	@Override
+	public boolean deleteAll(int memberId) {
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(DELETE_ALL);) {
+			stmt.setInt(1, memberId);
+			int i = stmt.executeUpdate();
+			if (i == 1) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	public static void main(String[] args) {
 		// Select
 		ChannelDAO dao = new ChannelDAOjdbc();
-		ChannelVO channel = dao.select(1, 5);
+		ChannelVO channel = dao.selectByChannelNo(1, 5);
 		System.out.println(channel);
 
 		// Insert

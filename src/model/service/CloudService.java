@@ -16,7 +16,7 @@ public class CloudService {
 		return dao.selectAll(memberId);
 	}
 
-	public Collection<CloudVO> searchFile(String fileName) {
+	public Collection<CloudVO> searchFile(int memberId, String fileName) {
 		Collection<CloudVO> result = null;
 		if (fileName != null && fileName.trim().length() != 0) {
 			result = dao.select(fileName);
@@ -24,7 +24,7 @@ public class CloudService {
 		return result;
 	}
 
-	public Collection<CloudVO> searchFile(java.util.Date fromTime, java.util.Date toTime) {
+	public Collection<CloudVO> searchFile(int memberId, java.util.Date fromTime, java.util.Date toTime) {
 		Collection<CloudVO> result = null;
 		if (fromTime != null && toTime != null) {
 			result = dao.select(fromTime, toTime);
@@ -32,7 +32,15 @@ public class CloudService {
 		return result;
 	}
 
-	public Collection<CloudVO> searchFile(String fileName, java.util.Date fromTime, java.util.Date toTime) {
+	public Collection<CloudVO> searchFile(String fileType, int memberId) {
+		Collection<CloudVO> result = null;
+		if (fileType != null && fileType != null) {
+			result = dao.
+		}
+		return result;
+	}
+
+	public Collection<CloudVO> searchFile(int memberId, String fileName, java.util.Date fromTime, java.util.Date toTime) {
 		Collection<CloudVO> result = null;
 		if (fileName != null && fileName.trim().length() != 0) {
 			if (fromTime != null && toTime != null) {
@@ -42,12 +50,53 @@ public class CloudService {
 		return result;
 	}
 
-	// public boolean changeFileName(String fileName) {
-	// if (fileName != null && fileName.trim().length() != 0) {
-	// dao.update(null);
-	// return true;
-	// } else {
-	// return false;
-	// }
-	// }
+	public Collection<CloudVO> searchFile(int memberId, String fileName, String fileType) {
+		Collection<CloudVO> result = null;
+		if (fileName != null && fileName.trim().length() != 0) {
+			if (fileType != null && fileType.trim().length() != 0) {
+				result = dao.
+			}
+		}
+		return result;
+	}
+
+	public Collection<CloudVO> searchFile(int memberId, java.util.Date fromTime, java.util.Date toTime, String fileType) {
+		Collection<CloudVO> result = null;
+		if (fileType != null && fileType.trim().length() != 0) {
+			if (fromTime != null && toTime != null) {
+				result = dao.
+			}
+		}
+		return result;
+	}
+
+	public Collection<CloudVO> searchFile(int memberId, String fileName, java.util.Date fromTime, java.util.Date toTime,
+			String fileType) {
+		Collection<CloudVO> result = null;
+		if (fileName != null && fileName.trim().length() != 0) {
+			if (fileType != null && fileType.trim().length() != 0) {
+				if (fromTime != null && toTime != null) {
+					result = dao.
+				}
+			}
+		}
+		return result;
+	}
+	
+	public boolean addFile(int memberId, String fileName, String fileType, String filePath, long fileSize) {
+		boolean result = false;
+		return result;
+	}
+	
+	public boolean modifyFile(int fileId, String filePath, long fileSize) {
+		boolean result = false;
+		return result;
+	}
+	public boolean modifyFileName(int fileId, String fileName, String filePath) {
+		boolean result = false;
+		return result;
+	}
+	public boolaen deleteFile(int fileId) {
+		
+	}
 }
