@@ -4,6 +4,7 @@ import java.util.Collection;
 import model.dao.ArticleDAO;
 import model.dao.jdbc.ArticleDAOjdbc;
 import model.vo.ArticleVO;
+import model.vo.MemberVO;
 
 /**
  * @author iTV小組成員
@@ -37,6 +38,9 @@ public class ArticleService {
 	 */
 	public Collection<ArticleVO> allSubArticle(String subclassNo) {
 		Collection<ArticleVO> list = null;
+		if (subclassNo != null && subclassNo.trim().length() != 0) {
+			list = dao.selectBySubclassNo(subclassNo);
+		}
 		return list;
 	}
 
@@ -49,6 +53,9 @@ public class ArticleService {
 	 */
 	public Collection<ArticleVO> searchArticle(String keyword) {
 		Collection<ArticleVO> list = null;
+		if (keyword != null && keyword.trim().length() != 0) {
+			list = dao.selectByMemberAccountAndArticleTitle(keyword, keyword);
+		}
 		return list;
 	}
 
@@ -61,6 +68,23 @@ public class ArticleService {
 	 */
 	public Collection<ArticleVO> searchArticle(String... keywords) {
 		Collection<ArticleVO> list = null;
+		MemberVO memberBean = new MemberVO();
+		ArticleVO articleBean = new ArticleVO();
+		if (keywords != null && keywords.length != 0) {
+			if (dao.selectByMemberAccountAndArticleTitle(memberBean.getMemberAccount(),
+					articleBean.getArticleTitle()) != null) {
+				list = dao.selectByMemberAccountAndArticleTitle(memberBean.getMemberAccount(),
+						articleBean.getArticleTitle());
+			} else if (dao.selectByMemberAccountAndSubclassNo(memberBean.getMemberAccount(),
+					articleBean.getSubclassNo()) != null) {
+				list = dao.selectByMemberAccountAndSubclassNo(memberBean.getMemberAccount(),
+						articleBean.getSubclassNo());
+			} else if (dao.selectByMemberAccountOrArticleTitleAndSubclassNo(articleBean.getSubclassNo(),
+					memberBean.getMemberAccount(), articleBean.getArticleTitle()) != null) {
+				list = dao.selectByMemberAccountOrArticleTitleAndSubclassNo(articleBean.getSubclassNo(),
+						memberBean.getMemberAccount(), articleBean.getArticleTitle());
+			}
+		}
 		return list;
 	}
 
@@ -68,13 +92,19 @@ public class ArticleService {
 	 * 增加一篇文章
 	 * 
 	 * @param bean
-	 *            必須包含 <b>memberId</b>、<b>subclassNoarticleTitle</b> 以及 <b>articleContent</b>
+	 *            必須包含 <b>memberId</b>、<b>subclassNoarticleTitle</b> 以及
+	 *            <b>articleContent</b>
 	 * @return true 新增成功; false 新增失敗
 	 * @see #addArticle(int, String, String, String)
 	 */
 	public boolean addArticle(ArticleVO bean) {
 		boolean result = false;
+		bean.getMemberId();
+		bean.getSubclassNo();
+		bean.getArticleTitle();
+		bean.getArticleContent();
 		if (bean != null) {
+			result = dao.insert(bean);
 		}
 		return result;
 	}
@@ -95,6 +125,14 @@ public class ArticleService {
 	 */
 	public boolean addArticle(int memberId, String subclassNo, String articleTitle, String articleContent) {
 		boolean result = false;
+		ArticleVO bean = new ArticleVO();
+		bean.setMemberId(memberId);
+		bean.setSubclassNo(subclassNo);
+		bean.setArticleTitle(articleTitle);
+		bean.setArticleContent(articleContent);
+		if (result == true) {
+			return dao.insert(bean);
+		}
 		return result;
 	}
 
@@ -108,8 +146,10 @@ public class ArticleService {
 	 * @return true 新增成功; false 新增失敗
 	 */
 	public boolean modifyArticle(String articleContent, int articleId) {
-		boolean result = false;
-		return result;
+		ArticleVO bean = new ArticleVO();
+		bean.setArticleContent(articleContent);
+		bean.setArticleId(articleId);
+		return dao.update(bean);
 	}
 
 	/**
@@ -121,10 +161,10 @@ public class ArticleService {
 	 * @see #modifyArticle(String, int)
 	 */
 	public boolean modifyArticle(ArticleVO bean) {
-		boolean result = false;
 		if (bean != null) {
+			return dao.update(bean);
 		}
-		return result;
+		return false;
 	}
 
 	/**
@@ -137,6 +177,9 @@ public class ArticleService {
 	 */
 	public boolean deleteArticle(int articleId) {
 		boolean result = false;
+		if (dao.delete(articleId)) {
+			return true;
+		}
 		return result;
 	}
 
@@ -150,6 +193,9 @@ public class ArticleService {
 	 */
 	public boolean deleteArticle(ArticleVO bean) {
 		boolean result = false;
+		if (dao.delete(bean.getArticleId())) {
+			return true;
+		}
 		return result;
 	}
 
@@ -158,9 +204,10 @@ public class ArticleService {
 		ArticleService service = new ArticleService();
 		// System.out.println(service.allArticle());
 		// System.out.println(service.allSubArticle("M"));
-		System.out.println(service.searchArticle("a"));
+		// System.out.println(service.searchArticle("Pikachu", "皮卡丘"));
 		// System.out.println(service.addArticle());
-		// System.out.println(service.deleteArticle(4, 10));
+		// System.out.println(service.deleteArticle(1));
+		System.out.println(service.modifyArticle("hey", 12));
 
 	}
 }

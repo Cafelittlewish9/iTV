@@ -12,6 +12,7 @@ public class ArticleVO {
 	private java.util.Date modifyTime;
 	private long watchTimes;
 	private MemberVO member;
+	private ArticleClassVO articleClass;
 
 	@Override
 	public String toString() {
@@ -90,5 +91,13 @@ public class ArticleVO {
 
 	public void setMember(MemberVO member) {
 		this.member = member;
+	}
+
+	public ArticleClassVO getArticleClass() {
+		return articleClass;
+	}
+
+	public void setArticleClass(ArticleClassVO articleClass) {
+		this.articleClass = articleClass;
 	}
 }
