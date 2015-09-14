@@ -25,17 +25,10 @@ public class ArticleService {
 	
 	//依文章名稱與發文帳號搜尋文章
 	//我本來以為會送keyword去兩個DAO的方法看哪個有結果再傳回來給我，卻感覺是我想太多了
-	public Collection<ArticleVO> searchArticle(String keyword){		
-		return dao.select(keyword);
+	public Collection<ArticleVO> searchArticle(String articleTitle){		
+		return dao.selectByArticleTitle(articleTitle);
 	}
 	
-	//依發文時間搜尋文章，DAO跟jdbc沒有這個方法
-	public Collection<ArticleVO> searchArticle(java.util.Date fromTime,java.util.Date toTime){
-		Collection<ArticleVO> result=null;
-		
-		return result;
-	}
-		
 	//增加文章
 	public boolean addArticle(){
 		boolean result=false;

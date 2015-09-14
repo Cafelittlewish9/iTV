@@ -17,8 +17,8 @@ public class ArticleDAOjdbc implements ArticleDAO {
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
-	private static final String SELECT_ALL = 
-			"SELECT articleId,memberId,subclassNo,articleTitle,articleContent,publishTime,modifyTime,watchTimes FROM article";
+	private static final String SELECT_ALL = "SELECT articleId,memberId,subclassNo,articleTitle,articleContent,publishTime,modifyTime,watchTimes FROM article ORDER BY modifytime";
+
 	@Override
 	public List<ArticleVO> selectAll() {
 		ArticleVO avo;
@@ -45,11 +45,10 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		return avos;
 	}
 
-	
-	private static final String SEARCH_BY_CLASS = "SELECT * FROM article WHERE subclassNo =?";
+	private static final String SEARCH_BY_CLASS = "SELECT * FROM article WHERE subclassNo = ? ORDER BY modifytime";
 
 	@Override
-	public List<ArticleVO> selectAll(String subclassNo) {
+	public List<ArticleVO> selectBySubclassNo(String subclassNo) {
 		ArticleVO avo = new ArticleVO();
 		List<ArticleVO> avos = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -74,10 +73,11 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		}
 		return avos;
 	}
-	
-	private static final String SEARCH_BY_TITLE = "SELECT * FROM article WHERE articleTitle like ?";
+
+	private static final String SEARCH_BY_TITLE = "SELECT * FROM article WHERE articleTitle like ? ORDER BY modifytime";
+
 	@Override
-	public List<ArticleVO> select(String... articleTitle) {
+	public List<ArticleVO> selectByArticleTitle(String articleTitle) {
 		ArticleVO avo = new ArticleVO();
 		List<ArticleVO> avos = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -103,15 +103,81 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		return avos;
 	}
 
-	private static final String SEARCH_BY_CLASS1 = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
-			+ "FROM article a join member m ON a.memberid = m.memberid WHERE memberaccount like '%'+?+'%' AND subclassNo = ? ORDER BY modifytime";
+	private static final String SEARCH_BY_CLASS_AND_MEMBERACCOUNT = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
+			+ "FROM article a join member m ON a.memberid = m.memberid WHERE memberaccount like ? AND subclassNo = ? ORDER BY modifytime";
+
 	@Override
-	public List<ArticleVO> selectAll(String memberacc, String subclassNo) {
+	public List<ArticleVO> selectByMemberAccountAndSubclassNo(String memberAccount, String subclassNo) {
 		ArticleVO avo = new ArticleVO();
 		List<ArticleVO> avos = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(SEARCH_BY_CLASS1);) {
+				PreparedStatement pstmt = conn.prepareStatement(SEARCH_BY_CLASS_AND_MEMBERACCOUNT);) {
+			pstmt.setString(1, "%" + memberAccount + "%");
+			pstmt.setString(2, subclassNo);
+			ResultSet rs = pstmt.executeQuery();
+			avos = new ArrayList<ArticleVO>();
+			while (rs.next()) {
+				avo = new ArticleVO();
+				avo.setArticleId(rs.getInt("articleId"));
+				avo.setMemberId(rs.getInt("memberId"));
+				avo.setSubclassNo(rs.getString("subclassNo"));
+				avo.setArticleTitle(rs.getString("articleTitle"));
+				avo.setArticleContent(rs.getString("articleContent"));
+				avo.setPublishTime(rs.getTimestamp("publishTime"));
+				avo.setModifyTime(rs.getTimestamp("modifyTime"));
+				avo.setWatchTimes(rs.getLong("watchTimes"));
+				avos.add(avo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return avos;
+	}
+
+	private static final String SEARCH_BY_MEMBERACCOUNT_ARTICLETITLE = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
+			+ "FROM article a join member m ON a.memberid = m.memberid WHERE memberaccount like ? OR articleTitle = ? ORDER BY modifytime";
+
+	@Override
+	public List<ArticleVO> selectByMemberAccountAndArticleTitle(String memberAccount, String articleTitle) {
+		ArticleVO avo = new ArticleVO();
+		List<ArticleVO> avos = null;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement pstmt = conn.prepareStatement(SEARCH_BY_MEMBERACCOUNT_ARTICLETITLE);) {
+			pstmt.setString(1, "%" + memberAccount + "%");
+			pstmt.setString(2, "%" + articleTitle + "%");
+			ResultSet rs = pstmt.executeQuery();
+			avos = new ArrayList<ArticleVO>();
+			while (rs.next()) {
+				avo = new ArticleVO();
+				avo.setArticleId(rs.getInt("articleId"));
+				avo.setMemberId(rs.getInt("memberId"));
+				avo.setSubclassNo(rs.getString("subclassNo"));
+				avo.setArticleTitle(rs.getString("articleTitle"));
+				avo.setArticleContent(rs.getString("articleContent"));
+				avo.setPublishTime(rs.getTimestamp("publishTime"));
+				avo.setModifyTime(rs.getTimestamp("modifyTime"));
+				avo.setWatchTimes(rs.getLong("watchTimes"));
+				avos.add(avo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return avos;
+	}
+
+	private static final String SEARCH_BY_CLASS_AND_MEMBERACCOUNT_OR_ARTICLETITLE = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
+			+ "FROM article a join member m ON a.memberid = m.memberid WHERE subclassNo = ? AND memberaccount like ? OR articleTitle ? ORDER BY modifytime";
+
+	@Override
+	public List<ArticleVO> selectByMemberAccountOrArticleTitleAndSubclassNo(String subclassNo, String memberAccount,
+			String articleTitle) {
+		ArticleVO avo = new ArticleVO();
+		List<ArticleVO> avos = null;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement pstmt = conn.prepareStatement(SEARCH_BY_CLASS_AND_MEMBERACCOUNT_OR_ARTICLETITLE);) {
 			pstmt.setString(1, subclassNo);
+			pstmt.setString(2, "%" + memberAccount + "%");
+			pstmt.setString(3, "%" + articleTitle + "%");
 			ResultSet rs = pstmt.executeQuery();
 			avos = new ArrayList<ArticleVO>();
 			while (rs.next()) {
@@ -131,16 +197,17 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		}
 		return avos;
 	}
-	
-	private static final String SEARCH_BY_MEMBERID2 = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
+
+	private static final String SEARCH_BY_MEMBERACCOUNT = "SELECT articleId, a.memberId, subclassNo, articleTitle, articleContent, publishTime, modifyTime, watchTimes, memberaccount"
 			+ "FROM article a JOIN member m ON a.memberid = m.memberid WHERE memberaccount like '%'+?+'%' ORDER BY modifytime";
+
 	@Override
-	public List<ArticleVO> select(String memberacc) {
+	public List<ArticleVO> selectByMemberAccount(String memberAccount) {
 		ArticleVO avo = new ArticleVO();
 		List<ArticleVO> avos = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(SEARCH_BY_MEMBERID2);) {
-			pstmt.setString(1, memberacc);
+				PreparedStatement pstmt = conn.prepareStatement(SEARCH_BY_MEMBERACCOUNT);) {
+			pstmt.setString(1, memberAccount);
 			ResultSet rs = pstmt.executeQuery();
 			avos = new ArrayList<ArticleVO>();
 			while (rs.next()) {
@@ -161,10 +228,10 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		return avos;
 	}
 
-	private static final String SEARCH_BY_MEMBERID = "SELECT * FROM article WHERE memberId like '%' + ? + '%'";
+	private static final String SEARCH_BY_MEMBERID = "SELECT * FROM article WHERE memberId like '%' + ? + '%' ORDER BY modifytime";
 
 	@Override
-	public List<ArticleVO> select(int memberId) {
+	public List<ArticleVO> selectByMemberId(int memberId) {
 		ArticleVO avo = new ArticleVO();
 		List<ArticleVO> avos = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -212,7 +279,7 @@ public class ArticleDAOjdbc implements ArticleDAO {
 	}
 
 	// 必須是發文的作者本人才能修改該篇文章
-	private static final String UPDATE = "UPDATE Article SET subclassNo=?,articleTitle=?,articleContent=?,modifyTime=?WHERE articleId=? AND memberId=?";
+	private static final String UPDATE = "UPDATE Article SET subclassNo=?,articleTitle=?,articleContent=?,modifyTime = GETUTCDATE() WHERE articleId=? AND memberId=?";
 
 	@Override
 	public boolean update(ArticleVO article) {
@@ -262,7 +329,6 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		ArticleVO avo = new ArticleVO();
 		// System.out.println(temp.selectAll());
 		// System.out.println(temp.delete(13, 2));
-		System.out.println(temp.select("一天"));
 
 		// avo.setMemberId(1);
 		// avo.setArticleId(14);
