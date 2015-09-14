@@ -12,13 +12,20 @@ import model.dao.CloudDAO;
 import model.vo.CloudVO;
 import util.GC;
 
+/**
+ * @author iTV小組成員
+ *
+ */
 public class CloudDAOjdbc implements CloudDAO {
 	private static final String URL = GC.URL;
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_ALL = "SELECT * FROM Cloud";
-
+	/**
+	 * 查詢所有會員雲端硬碟裡的所有檔案 
+	 * @return List<CloudVO>
+	 */
 	@Override
 	public List<CloudVO> selectAll() {
 		List<CloudVO> list = null;
@@ -45,7 +52,12 @@ public class CloudDAOjdbc implements CloudDAO {
 	}
 
 	private static final String SELECT_BY_MEMBERID = "SELECT * FROM Cloud WHERE memberId = ?";
-
+	/**
+	 * 查詢某會員雲端硬碟內所有檔案
+	 * 
+	 * @param memberId 文章類別名稱
+	 * @return true 增加成功; false 增加失敗
+	 */	
 	@Override
 	public List<CloudVO> selectAll(int memberId) {
 		List<CloudVO> list = null;

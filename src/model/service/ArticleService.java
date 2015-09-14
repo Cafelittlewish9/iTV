@@ -1,5 +1,6 @@
 package model.service;
 
+
 import java.util.Collection;
 import model.dao.ArticleDAO;
 import model.dao.jdbc.ArticleDAOjdbc;
@@ -29,38 +30,14 @@ public class ArticleService {
 	}
 
 	/**
-	 * 依照文章的類別來查詢文章
+	 * 依照文章子類別代碼來查詢文章
 	 * 
 	 * @param subclassNo
-	 *            文章的類別代碼
+	 *            文章的子類別代碼
 	 * @return Collection<ArticleVO>
 	 */
-	public Collection<ArticleVO> allSubArticle(String subclassNo) {
-		Collection<ArticleVO> list = null;
-		return list;
-	}
-
-	/**
-	 * 用單一關鍵字搜尋文章
-	 * 
-	 * @param keyword
-	 *            關鍵字，可能是文章標題，帳號或暱稱
-	 * @return Collection<ArticleVO>
-	 */
-	public Collection<ArticleVO> searchArticle(String keyword) {
-		Collection<ArticleVO> list = null;
-		return list;
-	}
-
-	/**
-	 * 用多個關鍵字搜尋文章
-	 * 
-	 * @param keywords
-	 *            關鍵字們，可能是文章標題和作者
-	 * @return Collection<ArticleVO>
-	 */
-	public Collection<ArticleVO> searchArticle(String... keywords) {
-		Collection<ArticleVO> list = null;
+	public Collection<ArticleVO> searchByInput(String keyword) {
+		Collection<ArticleVO> list = dao.selectByInput(keyword,keyword,keyword,keyword);
 		return list;
 	}
 
@@ -69,7 +46,7 @@ public class ArticleService {
 	 * 
 	 * @param bean
 	 *            必須包含 <b>memberId</b>、<b>subclassNoarticleTitle</b> 以及 <b>articleContent</b>
-	 * @return true 新增成功; false 新增失敗
+	 * @return true 新增成功；false 新增失敗
 	 * @see #addArticle(int, String, String, String)
 	 */
 	public boolean addArticle(ArticleVO bean) {
@@ -117,7 +94,7 @@ public class ArticleService {
 	 * 
 	 * @param bean
 	 *            必須包含 <b>articleContent</b> 與 <b>articleId</b>
-	 * @return true 新增成功; false 新增失敗
+	 * @return true 修改成功; false 修改失敗
 	 * @see #modifyArticle(String, int)
 	 */
 	public boolean modifyArticle(ArticleVO bean) {
@@ -158,7 +135,7 @@ public class ArticleService {
 		ArticleService service = new ArticleService();
 		// System.out.println(service.allArticle());
 		// System.out.println(service.allSubArticle("M"));
-		System.out.println(service.searchArticle("a"));
+		System.out.println(service.searchByInput("一天"));
 		// System.out.println(service.addArticle());
 		// System.out.println(service.deleteArticle(4, 10));
 

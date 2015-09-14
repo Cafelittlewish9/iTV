@@ -42,7 +42,6 @@ public class MemberDAOjdbc implements MemberDAO {
 	// 用戶只需要輸入密碼跟信箱，自動產生memberAccount和broadcastWebsite網址
 	// 問題在於若不同人在不同網站申請相同帳號的信箱，後者會無法申請，因為自動產生的broadcastWebsite會重複
 	private static final String INSERT2 = "INSERT INTO member (memberEmail,memberPassword,memberAccount,broadcastWebsite) VALUES (?,cast( ? as varbinary(50)), ?,?)";
-
 	@Override
 	public int insert2(MemberVO member) {
 		// 要先檢查bean是否為null
@@ -236,11 +235,11 @@ public class MemberDAOjdbc implements MemberDAO {
 	// 測試程式
 	public static void main(String[] args) throws SQLException, ParseException {
 		MemberDAO temp = new MemberDAOjdbc();
-		// memberDao的insert，與insert的差異在於用戶需輸入memberAccount
+		// memberDao的insert，與insert2的差異在於用戶需輸入memberAccount
 		MemberVO member1 = new MemberVO();
-		// member1.setMemberAccount("Micky Wong");
+		// member1.setMemberAccount("");
 		member1.setMemberPassword("G".getBytes());
-		member1.setMemberEmail("wolfrin@gmail.com");
+		member1.setMemberEmail("godzilla@gmail.com");
 		int count1 = temp.insert2(member1);
 		System.out.println("insert " + count1 + " rows");
 

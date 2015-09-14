@@ -12,12 +12,20 @@ import model.dao.ArticleClassDAO;
 import model.vo.ArticleClassVO;
 import util.GC;
 
+/**
+ * @author iTV小組成員
+ *
+ */
 public class ArticleClassDAOjdbc implements ArticleClassDAO {
 	private static final String URL = GC.URL;
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
+	
 	private static final String SELECT_ALL = "SELECT subclassNo,subclassName,className FROM articleclass";
-
+	/**
+	 * 查詢資料庫內所有文章
+	 * @return List<ArticleClassVO>
+	 */
 	@Override
 	public List<ArticleClassVO> selectAll() {
 		ArticleClassVO acvo;
@@ -39,10 +47,15 @@ public class ArticleClassDAOjdbc implements ArticleClassDAO {
 	}
 
 	private static final String SELECT = "SELECT subclassNo,subclassName,className FROM articleclass WHERE subclassNo=?";
-
+	/**
+	 * 以文章子分類代碼查詢該分類下資料庫內的所有文章
+	 * @param subclassNo 文章子分類代碼
+	 * @return List<ArticleClassVO>
+	 */
 	@Override
-	public ArticleClassVO select(String subclassNo) {
+	public List<ArticleClassVO> select(String subclassNo) {
 		ArticleClassVO acvo = null;
+		List<ArticleClassVO> acvos = new ArrayList<ArticleClassVO>();
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(SELECT);) {
 			pstmt.setString(1, subclassNo);
@@ -52,23 +65,28 @@ public class ArticleClassDAOjdbc implements ArticleClassDAO {
 				acvo.setSubclassNo(rs.getString("subclassNo"));
 				acvo.setSubclassName(rs.getString("subclassName"));
 				acvo.setClassName(rs.getString("className"));
+				acvos.add(acvo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return acvo;
+		return acvos;
 	}
 
 	private static final String INSERT = "INSERT INTO ArticleClass VALUES (?,?,?)";
-
+	/**
+	 * 新增文章分類、子分類代碼與子分類名稱
+	 * @param  bean 必須包含<b>subclassNo</b>、<b>subclassName</b>與<b>className</b>
+	 * @return true 新增成功；false 新增失敗
+	 */
 	@Override
-	public boolean insert(ArticleClassVO articleClass) {
+	public boolean insert(ArticleClassVO bean) {
 		boolean result = false;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(INSERT);) {
-			pstmt.setString(1, articleClass.getSubclassNo());
-			pstmt.setString(2, articleClass.getSubclassName());
-			pstmt.setString(3, articleClass.getClassName());
+			pstmt.setString(1, bean.getSubclassNo());
+			pstmt.setString(2, bean.getSubclassName());
+			pstmt.setString(3, bean.getClassName());
 			int updateCount = pstmt.executeUpdate();
 			if (updateCount == 1) {
 				result = true;
@@ -80,16 +98,20 @@ public class ArticleClassDAOjdbc implements ArticleClassDAO {
 	}
 
 	private static final String UPDATE = "UPDATE ArticleClass SET SubclassName=?,ClassName=? WHERE subclassNo=?";
-
+	/**
+	 * 修改文章分類、子分類代碼或子分類名稱
+	 * @param  bean 必須包含<b>subclassNo</b>
+	 * @return true 修改成功；false 修改失敗
+	 */
 	@Override
-	public boolean update(ArticleClassVO articleClass) {
+	public boolean update(ArticleClassVO bean) {
 		boolean result = false;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(UPDATE);) {
-			if (articleClass != null) {
-				pstmt.setString(1, articleClass.getSubclassName());
-				pstmt.setString(2, articleClass.getClassName());
-				pstmt.setString(3, articleClass.getSubclassNo());
+			if (bean != null) {
+				pstmt.setString(1, bean.getSubclassName());
+				pstmt.setString(2, bean.getClassName());
+				pstmt.setString(3, bean.getSubclassNo());
 				int updateCount = pstmt.executeUpdate();
 				if (updateCount == 1) {
 					result = true;
@@ -102,7 +124,11 @@ public class ArticleClassDAOjdbc implements ArticleClassDAO {
 	}
 
 	private static final String DELETE = "DELETE FROM ArticleClass WHERE subclassNo=?";
-
+	/**
+	 * 刪除文章分類、子分類代碼與子分類名稱
+	 * @param  subclassNo 文章子分類代碼
+	 * @return true 刪除成功；false 刪除失敗
+	 */
 	@Override
 	public boolean delete(String subclassNo) {
 		boolean result = false;
