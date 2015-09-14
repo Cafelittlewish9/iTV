@@ -9,6 +9,7 @@ public class ReplyArticleVO {
 	private String replyContent;
 	private java.util.Date publishTime;
 	private java.util.Date modifyTime;
+	private MemberVO member;
 	
 	@Override
 	public String toString() {
@@ -51,5 +52,11 @@ public class ReplyArticleVO {
 	}
 	public void setModifyTime(java.util.Date modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+	public MemberVO getMember() {
+		return member;
+	}
+	public void setMember(MemberVO member) {
+		this.member = member;
 	}
 }

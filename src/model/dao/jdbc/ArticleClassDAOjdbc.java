@@ -38,14 +38,34 @@ public class ArticleClassDAOjdbc implements ArticleClassDAO {
 		return acvos;
 	}
 
-	private static final String SELECT = "SELECT subclassNo,subclassName,className FROM articleclass WHERE subclassNo=?";
+	private static final String SELECT_BY_SUBCLASSNO = "SELECT subclassNo,subclassName,className FROM articleclass WHERE subclassNo=?";
 
 	@Override
-	public ArticleClassVO select(String subclassNo) {
+	public ArticleClassVO selectBySubclassNo(String subclassNo) {
 		ArticleClassVO acvo = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(SELECT);) {
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_BY_SUBCLASSNO);) {
 			pstmt.setString(1, subclassNo);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				acvo = new ArticleClassVO();
+				acvo.setSubclassNo(rs.getString("subclassNo"));
+				acvo.setSubclassName(rs.getString("subclassName"));
+				acvo.setClassName(rs.getString("className"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return acvo;
+	}
+	private static final String SELECT_BY_SUBCLASSNAME= "SELECT subclassNo,subclassName,className FROM articleclass WHERE subclassName=?";
+
+	@Override
+	public ArticleClassVO selectBySubclassName(String subclassName) {
+		ArticleClassVO acvo = null;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_BY_SUBCLASSNAME);) {
+			pstmt.setString(1, subclassName);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				acvo = new ArticleClassVO();

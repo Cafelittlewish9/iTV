@@ -7,9 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.dao.ChannelDAO;
 import model.vo.ChannelVO;
+import model.vo.MemberVO;
 import util.GC;
 
 public class ChannelDAOjdbc implements ChannelDAO {
@@ -17,7 +17,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
-	private static final String SELECT_BY_ID_CHANNELNO = "select * from channel where memberId=? and channelNo=?";
+	private static final String SELECT_BY_ID_CHANNELNO = "SELECT c.memberId, c.channelNo, c.broadcastWebsite, m.memberAccount, m.broadcastTitle FROM Channel c join Member m ON c.broadcastWebsite = m.broadcastWebsite where c.memberId = ? and channelNo = ?";
 
 	@Override
 	public ChannelVO selectByChannelNo(int memberId, int channelNo) {
@@ -33,6 +33,10 @@ public class ChannelDAOjdbc implements ChannelDAO {
 				result.setMemberId(rset.getInt("memberId"));
 				result.setChannelNo(rset.getByte("channelNo"));
 				result.setBroadcastWebsite(rset.getString("broadcastWebsite"));
+				MemberVO bean = new MemberVO();
+				bean.setMemberAccount(rset.getString("memberAccount"));
+				bean.setBroadcastTitle(rset.getString("broadcastTitle"));
+				result.setMember(bean);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
@@ -41,7 +45,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		return result;
 	}
 
-	private static final String SELECT_BY_ID = "select * from channel where memberId = ?";
+	private static final String SELECT_BY_ID = "SELECT c.memberId, c.channelNo, c.broadcastWebsite, m.memberAccount, m.broadcastTitle FROM Channel c join Member m ON c.broadcastWebsite = m.broadcastWebsite where c.memberId = ?";
 
 	@Override
 	public List<ChannelVO> selectByMemberId(int memberId) {
@@ -53,11 +57,15 @@ public class ChannelDAOjdbc implements ChannelDAO {
 			stmt.setInt(1, memberId);
 			rset = stmt.executeQuery();
 			list = new ArrayList<ChannelVO>();
-			if (rset.next()) {
+			while (rset.next()) {
 				result = new ChannelVO();
 				result.setMemberId(rset.getInt("memberId"));
 				result.setChannelNo(rset.getByte("channelNo"));
 				result.setBroadcastWebsite(rset.getString("broadcastWebsite"));
+				MemberVO bean = new MemberVO();
+				bean.setMemberAccount(rset.getString("memberAccount"));
+				bean.setBroadcastTitle(rset.getString("broadcastTitle"));
+				result.setMember(bean);
 				list.add(result);
 			}
 		} catch (SQLException e) {
@@ -69,7 +77,6 @@ public class ChannelDAOjdbc implements ChannelDAO {
 
 	private static final String SELECT_ALL = "select * from channel";
 
-	@Override
 	public List<ChannelVO> selectAll() {
 		List<ChannelVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -127,6 +134,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		}
 		return result;
 	}
+
 	@Override
 	public int update(ChannelVO bean) {
 		int result = -1;
@@ -160,7 +168,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		}
 		return false;
 	}
-	
+
 	private static final String DELETE_ALL = "delete from channel where memberId = ?";
 
 	@Override

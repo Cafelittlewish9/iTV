@@ -6,7 +6,7 @@ import model.vo.FollowVO;
 
 public interface FollowDAO {
 
-	public List<FollowVO> selectAll(int memberId);
+	public List<FollowVO> selectByMemberId(int memberId);
 
 	public List<FollowVO> selectAll();
 

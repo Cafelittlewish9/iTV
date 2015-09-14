@@ -6,8 +6,6 @@ import model.vo.ChannelVO;
 
 public interface ChannelDAO {
 
-	public List<ChannelVO> selectAll();
-
 	public ChannelVO selectByChannelNo(int memberId, int channelNo);
 
 	public List<ChannelVO> selectByMemberId(int memberId);

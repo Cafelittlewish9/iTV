@@ -1,12 +1,7 @@
 package util;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.TimeZone;
-
 import model.dao.LoginDAO;
 import model.dao.jdbc.LoginDAOjdbc;
 import model.vo.LoginVO;
@@ -77,7 +72,7 @@ public class ConvertType {
 		LoginDAO dao = new LoginDAOjdbc();
 		List<LoginVO> bean = dao.selectAll("Pikachu");
 		for (LoginVO a : bean) {
-			String time2 = ConvertType.convertToLocalTime(a.getLoginTime());
+			java.util.Date time2 = ConvertType.convertToLocalTime(a.getLoginTime());
 			System.out.println(time2);
 		}
 		// System.out.println(ZonedDateTime.now().getOffset().getId());
