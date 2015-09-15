@@ -7,6 +7,7 @@ public class ReportMemberVO {
 	private int reportedMemberId;
 	private java.util.Date reportTime;
 	private String reportReason;
+	private MemberVO member;
 	
 	@Override
 	public String toString() {
@@ -37,5 +38,11 @@ public class ReportMemberVO {
 	}
 	public void setReportReason(String reportReason) {
 		this.reportReason = reportReason;
+	}
+	public MemberVO getMember() {
+		return member;
+	}
+	public void setMember(MemberVO member) {
+		this.member = member;
 	}
 }

@@ -235,11 +235,9 @@ public class CloudDAOjdbc implements CloudDAO {
 
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_FILE);) {
-			stmt.setString(1, file.getFileName());
-			stmt.setString(2, file.getFileType());
-			stmt.setString(3, file.getFilePath());
-			stmt.setLong(4, file.getFileSize());
-			stmt.setInt(5, file.getFileId());
+			stmt.setString(1, filePath);
+			stmt.setLong(2, fileSize);
+			stmt.setInt(3, fileId);
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
@@ -256,11 +254,9 @@ public class CloudDAOjdbc implements CloudDAO {
 		CloudVO file=new CloudVO();
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_FILENAME);) {
-			stmt.setString(1, file.getFileName());
-			stmt.setString(2, file.getFileType());
-			stmt.setString(3, file.getFilePath());
-			stmt.setLong(4, file.getFileSize());
-			stmt.setInt(5, file.getFileId());
+			stmt.setString(1, fileName);
+			stmt.setString(2, filePath);
+			stmt.setInt(3, fileId);
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());

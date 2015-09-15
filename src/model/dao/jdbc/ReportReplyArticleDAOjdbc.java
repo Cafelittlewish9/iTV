@@ -1,5 +1,6 @@
 package model.dao.jdbc;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,7 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.ReportReplyArticleDAO;
+import model.vo.MemberVO;
+import model.vo.ReplyArticleVO;
 import model.vo.ReportReplyArticleVO;
+import util.ConvertType;
 import util.GC;
 
 public class ReportReplyArticleDAOjdbc implements ReportReplyArticleDAO {
@@ -17,7 +21,10 @@ public class ReportReplyArticleDAOjdbc implements ReportReplyArticleDAO {
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
-	private static final String SELECT_ALL = "SELECT * FROM ReportReplyArticle";
+	private static final String SELECT_ALL = "SELECT orderId, reportedReplyArticleId, reportTime, reportReason, "
+			+ "r.memberId, replyContent, modifyTime, memberAccount, memberPhoto FROM ReportReplyArticle "
+			+ "JOIN ReplyArticle r ON reportedReplyArticleId = replyArticleId JOIN Member m ON r.memberId = "
+			+ "m.memberId ORDER BY reportTime DESC";
 
 	@Override
 	public List<ReportReplyArticleVO> selectAll() {
@@ -33,8 +40,20 @@ public class ReportReplyArticleDAOjdbc implements ReportReplyArticleDAO {
 				reportReplyArticle = new ReportReplyArticleVO();
 				reportReplyArticle.setOrderId(rs.getInt("orderId"));
 				reportReplyArticle.setReportedReplyArticleId(rs.getInt("reportedReplyArticleId"));
-				reportReplyArticle.setReportTime(rs.getTimestamp("reportTime"));
+				reportReplyArticle.setReportTime(ConvertType.convertToLocalTime(rs.getTimestamp("reportTime")));
 				reportReplyArticle.setReportReason(rs.getString("reportReason"));
+				ReplyArticleVO replyArticle = new ReplyArticleVO();
+				replyArticle.setReplyArticleId(rs.getInt("reportedReplyArticleId"));
+				replyArticle.setMemberId(rs.getInt("r.memberId"));
+				replyArticle.setReplyContent(rs.getString("replyContent"));
+				replyArticle.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
+				MemberVO member = new MemberVO();
+				member.setMemberId(rs.getInt("r.memberId"));
+				member.setMemberAccount(rs.getString("memberAccount"));
+				Blob b = rs.getBlob("memberPhoto");
+				member.setMemberPhoto(b.getBytes(0, (int)b.length()));
+				replyArticle.setMember(member);
+				reportReplyArticle.setReplyArticle(replyArticle);
 				list.add(reportReplyArticle);
 			}
 		} catch (SQLException e) {

@@ -6,19 +6,19 @@ import model.vo.MemberVO;
 
 public interface MemberDAO {
 
-	int insert(MemberVO member) ;
+	public int insert(MemberVO member) ;
 
-	int insert2(MemberVO member);
+	public int insert2(MemberVO member);
 
-	List<MemberVO> getMemberList();
+	public List<MemberVO> getMemberList();
 
-	int getId(String memberAccount);
+	public int getId(String memberAccount);
 
-	int update(MemberVO member);	
+	public int update(MemberVO member);
 
-	MemberVO findByPK(int memberId);
+	public MemberVO findByPK(int memberId);
 
-	int switchSuspend(String memberAccount, boolean suspendRight);
+	public int switchSuspend(int memberId, boolean suspendRight);
 	
 	
 

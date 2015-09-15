@@ -9,14 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.ReportVideoDAO;
+import model.vo.MemberVO;
 import model.vo.ReportVideoVO;
+import model.vo.VideoVO;
+import util.ConvertType;
 import util.GC;
 public class ReportVideoDAOjdbc implements ReportVideoDAO {
 	private static final String URL = GC.URL;
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
-	private static final String SELECT_ALL = "SELECT * FROM ReportVideo";
+	private static final String SELECT_ALL = "SELECT orderId, reportedVideoId, reportTime, reportReason, "
+			+ "v.memberId, videoWebsite, videoClassName, videoTitle, videoUploadTime, videoDescription, "
+			+ "videoDescriptionModifyTime, memberAccount FROM ReportVideo JOIN Video v ON reportedVideoId = "
+			+ "videoId JOIN Member m ON v.memberId = m.memberId";
 
 	@Override
 	public List<ReportVideoVO> selectAll() {
@@ -30,8 +36,22 @@ public class ReportVideoDAOjdbc implements ReportVideoDAO {
 				ReportVideoVO reportVideo = new ReportVideoVO();
 				reportVideo.setOrderId(rs.getInt("orderId"));
 				reportVideo.setReportedVideoId(rs.getInt("reportedVideoId"));
-				reportVideo.setReportTime(rs.getTimestamp("reportTime"));
+				reportVideo.setReportTime(ConvertType.convertToLocalTime(rs.getTimestamp("reportTime")));
 				reportVideo.setReportReason(rs.getString("reportReason"));
+				VideoVO video = new VideoVO();
+				video.setVideoId(rs.getInt("reportedVideoId"));
+				video.setMemberId(rs.getInt("v.memberId"));
+				video.setVideoWebsite(rs.getString("videoWebsite"));
+				video.setVideoClassName(rs.getString("videoClassName"));
+				video.setVideoTitle(rs.getString("videoTitle"));
+				video.setVideoUploadTime(ConvertType.convertToLocalTime(rs.getTimestamp("videoUploadTime")));
+				video.setVideoDescription(rs.getString("videoDescription"));
+				video.setVideoDescriptionModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("videoDescriptionModifyTime")));
+				MemberVO member = new MemberVO();
+				member.setMemberId(rs.getInt("v.memberId"));
+				member.setMemberAccount(rs.getString("memberAccount"));
+				video.setMember(member);
+				reportVideo.setVideo(video);
 				list.add(reportVideo);
 			}
 		} catch (SQLException e) {

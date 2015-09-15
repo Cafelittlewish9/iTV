@@ -14,6 +14,7 @@ public class VideoVO {
 	private long videoWatchTimes;
 	private String videoDescription;
 	private java.util.Date videoDescriptionModifyTime;
+	private MemberVO member;
 	
 	@Override
 	public String toString() {
@@ -86,5 +87,11 @@ public class VideoVO {
 	}
 	public void setVideoDescriptionModifyTime(java.util.Date videoDescriptionModifyTime) {
 		this.videoDescriptionModifyTime = videoDescriptionModifyTime;
+	}
+	public MemberVO getMember() {
+		return member;
+	}
+	public void setMember(MemberVO member) {
+		this.member = member;
 	}
 }
