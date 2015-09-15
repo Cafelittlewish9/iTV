@@ -216,14 +216,14 @@ public class MemberDAOjdbc implements MemberDAO {
 	}
 
 	// 設定用戶是否被停權
-	private static final String SWITCH_SUSPEND="UPDATE member SET suspendMember=? WHERE memberAccount=?";
+	private static final String SWITCH_SUSPEND="UPDATE member SET suspendMember = ? WHERE memberId = ?";
 	@Override
-	public int switchSuspend(String memberAccount, boolean suspendRight) {
+	public int switchSuspend(int memberId, boolean suspendRight) {
 		int result=0;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement pstmt = conn.prepareStatement(SWITCH_SUSPEND);) {
 			pstmt.setBoolean(1, suspendRight);
-			pstmt.setString(2, memberAccount);
+			pstmt.setInt(2, memberId);
 			result=pstmt.executeUpdate();			
 		} catch (SQLException e) {
 			e.printStackTrace();

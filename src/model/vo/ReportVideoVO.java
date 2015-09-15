@@ -7,6 +7,7 @@ public class ReportVideoVO {
 	private int reportedVideoId;
 	private java.util.Date reportTime;
 	private String reportReason;
+	private VideoVO video;
 	
 	@Override
 	public String toString() {
@@ -37,5 +38,11 @@ public class ReportVideoVO {
 	}
 	public void setReportReason(String reportReason) {
 		this.reportReason = reportReason;
+	}
+	public VideoVO getVideo() {
+		return video;
+	}
+	public void setVideo(VideoVO video) {
+		this.video = video;
 	}
 }

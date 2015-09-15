@@ -8,6 +8,7 @@ public class VideoCommentsVO {
 	private int videoId;
 	private String commentContent;
 	private java.util.Date commentTime;
+	private MemberVO member;
 	
 	@Override
 	public String toString() {
@@ -53,5 +54,11 @@ public class VideoCommentsVO {
 
 	public void setCommentTime(java.util.Date commentTime) {
 		this.commentTime = commentTime;
+	}
+	public MemberVO getMember() {
+		return member;
+	}
+	public void setMember(MemberVO member) {
+		this.member = member;
 	}
 }

@@ -27,7 +27,6 @@ public class ReportVideoService {
 		return dao.insert(bean);
 	}
 	public boolean deleteVideo(ReportVideoVO bean){
-						// 拿到要舉報的VideoId，所以才能讓Video刪掉自己的資料
 		boolean result1 = dao2.delete(bean.getReportedVideoId());
 		boolean result2 = dao.delete(bean.getOrderId());
 		if(result1 && result2){
