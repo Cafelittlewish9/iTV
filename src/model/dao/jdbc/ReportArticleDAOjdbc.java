@@ -1,5 +1,6 @@
 package model.dao.jdbc;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,9 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.dao.ReportArticleDAO;
+import model.vo.ArticleClassVO;
+import model.vo.ArticleVO;
+import model.vo.MemberVO;
 import model.vo.ReportArticleVO;
+import util.ConvertType;
 import util.GC;
 
 public class ReportArticleDAOjdbc implements ReportArticleDAO {
@@ -17,7 +21,10 @@ public class ReportArticleDAOjdbc implements ReportArticleDAO {
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
-	private static final String SELECT_ALL = "SELECT * FROM ReportArticle ORDER BY reportTime DESC";
+	private static final String SELECT_ALL = "SELECT orderId, reportedArticleId, reportTime, reportReason, articleId, "
+			+ "a.memberId, memberAccount, memberPhoto, articleTitle, articleContent, modifyTime,a.subclassNo, className, subclassName"
+			+ "FROM ReportArticle r JOIN Article a ON reportedArticleId = articleId JOIN Member m "
+			+ "ON a.memberId = m.memberId JOIN ArticleClass ac ON a.subclassNo = ac.subclassNo ORDER BY reportTime DESC";
 
 	@Override
 	public List<ReportArticleVO> selectAll() {
@@ -33,8 +40,27 @@ public class ReportArticleDAOjdbc implements ReportArticleDAO {
 				reportArticle = new ReportArticleVO();
 				reportArticle.setOrderId(rs.getInt("orderId"));
 				reportArticle.setReportedArticleId(rs.getInt("reportedArticleId"));
-				reportArticle.setReportTime(rs.getTimestamp("reportTime"));
+				reportArticle.setReportTime(ConvertType.convertToLocalTime(rs.getTimestamp("reportTime")));
 				reportArticle.setReportReason(rs.getString("reportReason"));
+				ArticleVO article = new ArticleVO();
+				article.setArticleId(rs.getInt("articleId"));
+				article.setMemberId(rs.getInt("memberId"));
+				article.setArticleTitle(rs.getString("articleTitle"));
+				article.setArticleContent(rs.getString("articleContent"));
+				article.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
+				article.setSubclassNo(rs.getString("subclassNo"));
+				MemberVO member = new MemberVO();
+				member.setMemberId(rs.getInt("memberId"));
+				member.setMemberAccount(rs.getString("memberAccount"));
+				Blob b = rs.getBlob("memberPhoto");
+				member.setMemberPhoto(b.getBytes(1, (int)b.length()));
+				article.setMember(member);
+				ArticleClassVO articleClass = new ArticleClassVO();
+				articleClass.setSubclassNo(rs.getString("subclassNo"));
+				articleClass.setClassName(rs.getString("className"));
+				articleClass.setSubclassName(rs.getString("subclassName"));
+				article.setArticleClass(articleClass);
+				reportArticle.setArticle(article);
 				list.add(reportArticle);
 			}
 		} catch (SQLException e) {

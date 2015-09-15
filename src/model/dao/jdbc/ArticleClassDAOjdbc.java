@@ -46,18 +46,22 @@ public class ArticleClassDAOjdbc implements ArticleClassDAO {
 		return acvos;
 	}
 
+
 	private static final String SELECT = "SELECT subclassNo,subclassName,className FROM articleclass WHERE subclassNo=?";
 	/**
 	 * 以文章子分類代碼查詢該分類下資料庫內的所有文章
 	 * @param subclassNo 文章子分類代碼
 	 * @return List<ArticleClassVO>
 	 */
+	private static final String SELECT_BY_SUBCLASSNO = "SELECT subclassNo,subclassName,className FROM articleclass WHERE subclassNo=?";
 	@Override
+
 	public List<ArticleClassVO> select(String subclassNo) {
+
 		ArticleClassVO acvo = null;
 		List<ArticleClassVO> acvos = new ArrayList<ArticleClassVO>();
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement pstmt = conn.prepareStatement(SELECT);) {
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_BY_SUBCLASSNO);) {
 			pstmt.setString(1, subclassNo);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -71,6 +75,26 @@ public class ArticleClassDAOjdbc implements ArticleClassDAO {
 			e.printStackTrace();
 		}
 		return acvos;
+	}
+	private static final String SELECT_BY_SUBCLASSNAME= "SELECT subclassNo,subclassName,className FROM articleclass WHERE subclassName=?";
+
+	@Override
+	public ArticleClassVO selectBySubclassName(String subclassName) {
+		ArticleClassVO acvo = null;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement pstmt = conn.prepareStatement(SELECT_BY_SUBCLASSNAME);) {
+			pstmt.setString(1, subclassName);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				acvo = new ArticleClassVO();
+				acvo.setSubclassNo(rs.getString("subclassNo"));
+				acvo.setSubclassName(rs.getString("subclassName"));
+				acvo.setClassName(rs.getString("className"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return acvo;
 	}
 
 	private static final String INSERT = "INSERT INTO ArticleClass VALUES (?,?,?)";
@@ -158,6 +182,11 @@ public class ArticleClassDAOjdbc implements ArticleClassDAO {
 		System.out.println(temp.update(acvo));
 		// System.out.println(temp.delete("o"));
 
+	}
+
+	@Override
+	public ArticleClassVO selectBySubclassNo(String subclassNo) {
+		return null;
 	}
 
 }

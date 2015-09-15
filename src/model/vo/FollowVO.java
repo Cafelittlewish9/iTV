@@ -3,6 +3,7 @@ package model.vo;
 public class FollowVO {
 	private int memberId;
 	private int followId;
+	private MemberVO member;
 	
 	@Override
 	public String toString() {
@@ -19,5 +20,11 @@ public class FollowVO {
 	}
 	public void setFollowId(int followId) {
 		this.followId = followId;
+	}
+	public MemberVO getMember() {
+		return member;
+	}
+	public void setMember(MemberVO member) {
+		this.member = member;
 	}
 }

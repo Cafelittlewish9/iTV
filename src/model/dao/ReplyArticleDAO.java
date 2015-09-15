@@ -8,11 +8,11 @@ public interface ReplyArticleDAO {
 
 	public List<ReplyArticleVO> selectAll();
 
-	public List<ReplyArticleVO> select(int articleId);
+	public List<ReplyArticleVO> selectByArticleId(int articleId);
 
-	public int insert(ReplyArticleVO replyArticle);
+	public int insert(int memberId, int articleId, String replyContent);
 
-	public int update(ReplyArticleVO replyArticle);
+	public int update(String replyContent, int replyArticleId);
 
 	public int delete(int replyArticleId);
 

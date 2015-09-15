@@ -7,6 +7,7 @@ public class ReportArticleVO {
 	private int reportedArticleId;
 	private java.util.Date reportTime;
 	private String reportReason;
+	private ArticleVO article;
 	
 	@Override
 	public String toString() {
@@ -37,5 +38,11 @@ public class ReportArticleVO {
 	}
 	public void setReportReason(String reportReason) {
 		this.reportReason = reportReason;
+	}
+	public ArticleVO getArticle() {
+		return article;
+	}
+	public void setArticle(ArticleVO article) {
+		this.article = article;
 	}
 }

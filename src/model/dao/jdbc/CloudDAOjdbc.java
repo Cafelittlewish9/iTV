@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.dao.CloudDAO;
 import model.vo.CloudVO;
 import util.GC;
@@ -59,7 +58,7 @@ public class CloudDAOjdbc implements CloudDAO {
 	 * @return true 增加成功; false 增加失敗
 	 */	
 	@Override
-	public List<CloudVO> selectAll(int memberId) {
+	public List<CloudVO> selectByMemberId(int memberId) {
 		List<CloudVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_MEMBERID);) {
@@ -84,10 +83,10 @@ public class CloudDAOjdbc implements CloudDAO {
 		return list;
 	}
 
-	private static final String SELECT_BY_FILENAME = "SELECT * FROM Cloud WHERE fileName like ?";
+	private static final String SELECT_BY_FILENAME = "SELECT * FROM Cloud WHERE memberId = ? And fileName like ?";
 
 	@Override
-	public List<CloudVO> select(String fileName) {
+	public List<CloudVO> selectByFileName(int memberId, String fileName) {
 		List<CloudVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_FILENAME);) {
@@ -112,10 +111,10 @@ public class CloudDAOjdbc implements CloudDAO {
 		return list;
 	}
 
-	private static final String SELECT_BY_TIME = "SELECT * FROM Cloud WHERE modifyTime BETWEEN ? AND ?";
+	private static final String SELECT_BY_TIME = "SELECT * FROM Cloud WHERE memberId = ? AND (modifyTime BETWEEN ? AND ? )";
 
 	@Override
-	public List<CloudVO> select(java.util.Date fromTime, java.util.Date toTime) {
+	public List<CloudVO> selectByTime(int memberId, java.util.Date fromTime, java.util.Date toTime) {
 		List<CloudVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_TIME);) {
@@ -141,10 +140,19 @@ public class CloudDAOjdbc implements CloudDAO {
 		return list;
 	}
 
-	private static final String SELECT_BY_FILENAME_AND_TIME = "SELECT * FROM Cloud WHERE fileName like ? and modifyTime BETWEEN ? AND ?";
+	private static final String SELECT_BY_FILETYPE = "SELECT * FROM Cloud WHERE memberId = ? AND fileType = ?";
 
 	@Override
-	public List<CloudVO> select(String fileName, java.util.Date fromTime, java.util.Date toTime) {
+	public List<CloudVO> selectByFileType(int memberId, String fileType) {
+		List<CloudVO> list = null;
+		return list;
+	}
+
+	private static final String SELECT_BY_FILENAME_AND_TIME = "SELECT * FROM Cloud WHERE memberId = ? AND fileName like ? AND (modifyTime BETWEEN ? AND ? )";
+
+	@Override
+	public List<CloudVO> selectByFileNameAndTime(int memberId, String fileName, java.util.Date fromTime,
+			java.util.Date toTime) {
 		List<CloudVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(SELECT_BY_FILENAME_AND_TIME);) {
@@ -171,6 +179,32 @@ public class CloudDAOjdbc implements CloudDAO {
 		return list;
 	}
 
+	private static final String SELECT_BY_FILENAME_AND_FILETYPE = "SELECT * FROM Cloud WHERE memberId = ? AND fileType = ? AND fileName like ?";
+
+	@Override
+	public List<CloudVO> selectByFileNameAndFileType(int memberId, String fileName, String fileType) {
+		List<CloudVO> list = null;
+		return list;
+	}
+
+	private static final String SELECT_BY_FILETYPE_AND_TIME = "SELECT * FROM Cloud WHERE memberId = ? AND fileType = ? AND (modifyTime BETWEEN ? AND ? )";
+
+	@Override
+	public List<CloudVO> selectByFileTypeAndTime(int memberId, java.util.Date fromTime, java.util.Date toTime,
+			String fileType) {
+		List<CloudVO> list = null;
+		return list;
+	}
+
+	private static final String SELECT_BY_FILENAME_FILETYPE_AND_TIME = "SELECT * FROM Cloud WHERE memberId = ? AND fileType = ? AND fileName like ? AND (modifyTime BETWEEN ? AND ? )";
+
+	@Override
+	public List<CloudVO> selectByFileNameFileTypeAndTime(int memberId, String fileName, java.util.Date fromTime,
+			java.util.Date toTime, String fileType) {
+		List<CloudVO> list = null;
+		return list;
+	}
+
 	private static final String INSERT = "INSERT INTO Cloud(memberId, fileName, fileType, filePath, fileSize) VALUES (?, ?, ?, ?, ?)";
 
 	@Override
@@ -191,13 +225,33 @@ public class CloudDAOjdbc implements CloudDAO {
 		return result;
 	}
 
-	private static final String UPDATE = "UPDATE Cloud SET fileName = ?, fileType = ?, filePath = ?, fileSize = ?, modifyTime = GETUTCDATE() WHERE fileId = ?";
+	private static final String UPDATE_FILE = "UPDATE Cloud SET filePath = ?, fileSize = ?, modifyTime = GETUTCDATE() WHERE fileId = ?";
 
 	@Override
-	public int update(CloudVO file) {
+	public int updateFile(String filePath, long fileSize, int fileId) {
 		int result = -1;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement stmt = conn.prepareStatement(UPDATE);) {
+				PreparedStatement stmt = conn.prepareStatement(UPDATE_FILE);) {
+			stmt.setString(1, file.getFileName());
+			stmt.setString(2, file.getFileType());
+			stmt.setString(3, file.getFilePath());
+			stmt.setLong(4, file.getFileSize());
+			stmt.setInt(5, file.getFileId());
+			result = stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	private static final String UPDATE_FILENAME = "UPDATE Cloud SET fileName = ?, filePath = ? WHERE fileId = ?";
+
+	@Override
+	public int updateFileName(int fileId, String fileName, String filePath) {
+		int result = -1;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(UPDATE_FILENAME);) {
 			stmt.setString(1, file.getFileName());
 			stmt.setString(2, file.getFileType());
 			stmt.setString(3, file.getFilePath());
@@ -228,40 +282,6 @@ public class CloudDAOjdbc implements CloudDAO {
 	}
 
 	public static void main(String[] args) {
-		CloudDAO temp = new CloudDAOjdbc();
 
-		// List<CloudVO> all = temp.selectAll();
-		// System.out.println("SELECT_ALL result = " + all);
-
-		// CloudVO file1 = new CloudVO();
-		// file1.setMemberId(4);
-		// file1.setFileName("ohohohohh");
-		// file1.setFilePath("dhdhdhdh");
-		// file1.setFileSize(7788);
-		// file1.setFileType("khkhkh");
-		// file1.setModifyTime(new java.util.Date());
-		// int i = temp.insert(file1);
-		// System.out.println("INSERT result = " + i);
-
-		// CloudVO file2 = new CloudVO();
-		// file2.setFileId(13);
-		// file2.setFileName("XXX");
-		// file2.setFilePath("OOO");
-		// file2.setFileSize(5566);
-		// file2.setFileType("VVV");
-		// file2.setModifyTime(new java.util.Date(5566));
-		// int j = temp.update(file2);
-		// System.out.println("UPDATE result = " + j);
-		//
-		// CloudVO file3 = new CloudVO();
-		// file3.setFileId(13);
-		// int k = temp.delete(file3);
-		// System.out.println("DELETE result = " + k);
-
-		List<CloudVO> list = temp.select("檔案1");
-		System.out.println(list);
-
-		List<CloudVO> list2 = temp.select(new java.sql.Timestamp(5464646L), new java.sql.Timestamp(46535436436L));
-		System.out.println(list2);
 	}
 }

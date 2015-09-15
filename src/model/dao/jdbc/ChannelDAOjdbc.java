@@ -7,9 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.dao.ChannelDAO;
 import model.vo.ChannelVO;
+import model.vo.MemberVO;
 import util.GC;
 
 /**
@@ -21,6 +21,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
+
 	private static final String SELECT_BY_ID_CHANNELNO = "select * from channel where memberId=? and channelNo=?";
 	/**
 	 * 查詢某會員設定的某頻道網址
@@ -28,8 +29,10 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	 * @param channelNo 頻道編號
 	 * @return ChannelVO
 	 */	
+	private static final String SELECT_BY_ID_CHANNELNO = "SELECT c.memberId, c.channelNo, c.broadcastWebsite, m.memberAccount, m.broadcastTitle FROM Channel c join Member m ON c.broadcastWebsite = m.broadcastWebsite where c.memberId = ? and channelNo = ?";
+
 	@Override
-	public ChannelVO select(int memberId, int channelNo) {
+	public ChannelVO selectByChannelNo(int memberId, int channelNo) {
 		ChannelVO result = null;
 		ResultSet rset = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -42,6 +45,10 @@ public class ChannelDAOjdbc implements ChannelDAO {
 				result.setMemberId(rset.getInt("memberId"));
 				result.setChannelNo(rset.getByte("channelNo"));
 				result.setBroadcastWebsite(rset.getString("broadcastWebsite"));
+				MemberVO bean = new MemberVO();
+				bean.setMemberAccount(rset.getString("memberAccount"));
+				bean.setBroadcastTitle(rset.getString("broadcastTitle"));
+				result.setMember(bean);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getErrorCode() + " : " + e.getMessage());
@@ -56,8 +63,10 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	 * @param memberId 設定頻道表之會員編號
 	 * @return List<ChannelVO>
 	 */	
+	private static final String SELECT_BY_ID = "SELECT c.memberId, c.channelNo, c.broadcastWebsite, m.memberAccount, m.broadcastTitle FROM Channel c join Member m ON c.broadcastWebsite = m.broadcastWebsite where c.memberId = ?";
+
 	@Override
-	public List<ChannelVO> selectAll(int memberId) {
+	public List<ChannelVO> selectByMemberId(int memberId) {
 		List<ChannelVO> list = null;
 		ChannelVO result = null;
 		ResultSet rset = null;
@@ -66,11 +75,15 @@ public class ChannelDAOjdbc implements ChannelDAO {
 			stmt.setInt(1, memberId);
 			rset = stmt.executeQuery();
 			list = new ArrayList<ChannelVO>();
-			if (rset.next()) {
+			while (rset.next()) {
 				result = new ChannelVO();
 				result.setMemberId(rset.getInt("memberId"));
 				result.setChannelNo(rset.getByte("channelNo"));
 				result.setBroadcastWebsite(rset.getString("broadcastWebsite"));
+				MemberVO bean = new MemberVO();
+				bean.setMemberAccount(rset.getString("memberAccount"));
+				bean.setBroadcastTitle(rset.getString("broadcastTitle"));
+				result.setMember(bean);
 				list.add(result);
 			}
 		} catch (SQLException e) {
@@ -86,6 +99,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	 * @return List<ChannelVO>
 	 */	
 	@Override
+
 	public List<ChannelVO> selectAll() {
 		List<ChannelVO> list = null;
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -154,6 +168,22 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		return result;
 	}
 
+	@Override
+	public int update(ChannelVO bean) {
+		int result = -1;
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(UPDATE);) {
+			stmt.setString(1, bean.getBroadcastWebsite());
+			stmt.setInt(2, bean.getMemberId());
+			stmt.setInt(3, bean.getChannelNo());
+			result = stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getErrorCode() + " : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	private static final String DELETE = "delete from channel where memberId=? and channelNo=?";
 	/**
 	 * 刪除頻道表
@@ -178,10 +208,27 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		return false;
 	}
 
+	private static final String DELETE_ALL = "delete from channel where memberId = ?";
+
+	@Override
+	public boolean deleteAll(int memberId) {
+		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+				PreparedStatement stmt = conn.prepareStatement(DELETE_ALL);) {
+			stmt.setInt(1, memberId);
+			int i = stmt.executeUpdate();
+			if (i == 1) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	public static void main(String[] args) {
 		// Select
 		ChannelDAO dao = new ChannelDAOjdbc();
-		ChannelVO channel = dao.select(1, 5);
+		ChannelVO channel = dao.selectByChannelNo(1, 5);
 		System.out.println(channel);
 
 		// Insert
