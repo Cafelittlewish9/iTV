@@ -18,8 +18,8 @@ public class VideoDAOjdbc implements VideoDAO {
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
-	private static final String SELECT_BY_ID = "select * from video where videoTitle like ?";
-
+	private static final String SELECT_BY_ID = "SELECT v.*,m.memberAccount FROM video v Join member m ON v.memberId = m.memberId WHERE videoTitle LIKE ?";
+	
 	@Override
 	public List<VideoVO> select(String videoTitle) {
 		VideoVO result = null;
@@ -50,7 +50,7 @@ public class VideoDAOjdbc implements VideoDAO {
 		return list;
 	}
 
-	private static final String SELECT_ALL = "select * from video";
+	private static final String SELECT_ALL = "SELECT v.*,m.memberAccount FROM video v Join member m ON v.memberId = m.memberId";
 
 	@Override
 	public List<VideoVO> selectAll() {

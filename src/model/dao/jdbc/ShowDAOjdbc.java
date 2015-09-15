@@ -17,8 +17,8 @@ public class ShowDAOjdbc implements ShowDAO {
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
-	private static final String SELECT_BY_ID = "select * from show where memberId = ?";
-
+	private static final String SELECT_BY_ID = "SELECT s.*,m.memberAccount FROM show s Join member m ON s.memberId = m.memberId WHERE s.memberId = ?";
+	
 	@Override
 	public List<ShowVO> select(int memberId) {
 		ShowVO result = null;
@@ -41,7 +41,7 @@ public class ShowDAOjdbc implements ShowDAO {
 		return list;
 	}
 
-	private static final String SELECT_ALL = "select * from show";
+	private static final String SELECT_ALL = "SELECT s.*,m.memberAccount FROM show s Join member m ON s.memberId = m.memberId";
 
 	@Override
 	public List<ShowVO> selectAll() {

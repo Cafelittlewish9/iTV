@@ -91,7 +91,7 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		return list;
 	}
 
-	private static final String SELECT_ALL = "select * from channel";
+	private static final String SELECT_ALL = "SELECT c.*,m.memberAccount FROM channel c Join member m ON c.memberId = m.memberId ";
 	/**
 	 * 查詢網站內所有頻道表
 	 * @return List<ChannelVO>

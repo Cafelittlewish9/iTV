@@ -50,9 +50,8 @@ public class BlackDAOjdbc implements BlackDAO {
 		return markResult;
 	}
 
-//	private static final String GET_LIST2 = "SELECT blackedId FROM black WHERE memberId=?";
-	private static final String GET_LIST="select b.memberId, b.blackedId,m.memberAccount from black b join member m"
-	+" on b.blackedid = m.memberid where b.memberId=?";
+	private static final String GET_LIST="SELETE b.memberId, b.blackedId,m.memberAccount FROM black b JOIN member m"
+	+" ON b.blackedid = m.memberid WHERE b.memberId=?";
 	
 	/**
 	 * 查詢某會員編號所設定的全部黑名單

@@ -18,8 +18,9 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 	private static final String PASSWORD = GC.PASSWORD;
 	
 	private static final String SELECT_ALL = 
-			"SELECT commentId,memberId,videoId,commentContent,commentTime FROM videoComments";
-	@Override
+			"SELECT commentId,memberId,videoId,commentContent,commentTime FROM videoComments vc Join member m ON vc.memberId = m.memberId";
+	
+		@Override
 	public List<VideoCommentsVO> selectAll() {
 		VideoCommentsVO vcvo = new VideoCommentsVO();
 		List<VideoCommentsVO> vcvos = new ArrayList<VideoCommentsVO>();

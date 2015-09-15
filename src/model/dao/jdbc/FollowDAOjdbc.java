@@ -45,8 +45,8 @@ public class FollowDAOjdbc implements FollowDAO {
 		return list;
 	}
 
-	private static final String SELECT_ALL = "select * from Follow";
-
+	private static final String SELECT_ALL = "SELECT f.*,m.memberAccount FROM follow f Join member m ON f.followId = m.memberId";
+	 
 	@Override
 	public List<FollowVO> selectAll() {
 		List<FollowVO> result = null;
