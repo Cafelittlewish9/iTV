@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.ArticleDAO;
 import model.vo.ArticleVO;
+import model.vo.MemberVO;
 import util.ConvertType;
 import util.GC;
 
@@ -76,6 +77,7 @@ public class ArticleDAOjdbc implements ArticleDAO {
 			ResultSet rs = pstmt.executeQuery();
 			avos = new ArrayList<ArticleVO>();
 			while (rs.next()) {
+				MemberVO bean=new MemberVO();
 				avo = new ArticleVO();
 				avo.setArticleId(rs.getInt("articleId"));
 				avo.setMemberId(rs.getInt("memberId"));
@@ -85,6 +87,8 @@ public class ArticleDAOjdbc implements ArticleDAO {
 				avo.setPublishTime(ConvertType.convertToLocalTime(rs.getTimestamp("publishTime")));
 				avo.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				avo.setWatchTimes(rs.getLong("watchTimes"));
+				bean.setMemberAccount(rs.getString("memberAccount"));
+				avo.setMember(bean);
 				avos.add(avo);
 			}
 		} catch (SQLException e) {

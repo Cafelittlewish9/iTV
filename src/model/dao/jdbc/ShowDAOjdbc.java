@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.dao.ShowDAO;
+import model.vo.MemberVO;
 import model.vo.ShowVO;
 import util.ConvertType;
 import util.GC;
@@ -29,10 +30,14 @@ public class ShowDAOjdbc implements ShowDAO {
 			ResultSet rset = stmt.executeQuery();
 			list = new ArrayList<ShowVO>();
 			while (rset.next()) {
+				MemberVO bean=new MemberVO();
 				result = new ShowVO();
 				result.setMemberId(rset.getInt("memberId"));
 				result.setShowTime(ConvertType.convertToLocalTime(rset.getTimestamp("showTime")));
 				result.setWebsite(rset.getString("website"));
+				bean.setMemberAccount(rset.getString("memberAccount"));
+				bean.setBroadcastTitle(rset.getString("broadcastTitle"));
+				result.setMember(bean);
 				list.add(result);
 			}
 		} catch (SQLException e) {

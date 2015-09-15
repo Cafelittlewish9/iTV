@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.VideoCommentsDAO;
+import model.vo.MemberVO;
 import model.vo.VideoCommentsVO;
 import util.GC;
 
@@ -28,12 +29,15 @@ public class VideoCommentsDAOjdbc implements VideoCommentsDAO {
 				PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL);
 				ResultSet rs = pstmt.executeQuery();) {
 			while (rs.next()) {
+				MemberVO bean=new MemberVO();
 				vcvo = new VideoCommentsVO();
 				vcvo.setCommentId(rs.getInt("commentId"));
 				vcvo.setMemberId(rs.getInt("memberId"));
 				vcvo.setVideoId(rs.getInt("videoId"));
 				vcvo.setCommentContent(rs.getString("commentContent"));
 				vcvo.setCommentTime(rs.getTimestamp("commentTime"));
+				bean.setMemberAccount(rs.getString("memberAccount"));
+				vcvo.setMember(bean);
 				vcvos.add(vcvo);
 			}
 		} catch (SQLException e) {

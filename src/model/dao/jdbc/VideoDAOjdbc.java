@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.VideoDAO;
+import model.vo.MemberVO;
 import model.vo.VideoVO;
 import util.ConvertType;
 import util.GC;
@@ -30,6 +31,7 @@ public class VideoDAOjdbc implements VideoDAO {
 			ResultSet rset = stmt.executeQuery();
 			list = new ArrayList<VideoVO>();
 			while (rset.next()) {
+				MemberVO bean=new MemberVO();
 				result = new VideoVO();
 				result.setVideoId(rset.getInt("videoId"));
 				result.setMemberId(rset.getInt("memberId"));
@@ -42,6 +44,8 @@ public class VideoDAOjdbc implements VideoDAO {
 				result.setVideoWatchTimes(rset.getLong("videoWatchTimes"));
 				result.setVideoDescription(rset.getString("videoDescription"));
 				result.setVideoDescriptionModifyTime(ConvertType.convertToLocalTime(rset.getTimestamp("videoDescriptionModifyTime")));
+				bean.setMemberAccount(rset.getString("memberAccount"));
+				result.setMember(bean);
 				list.add(result);
 			}
 		} catch (SQLException e) {
