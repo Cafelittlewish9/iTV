@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.ShowDAO;
 import model.vo.ShowVO;
+import util.ConvertType;
 import util.GC;
 
 public class ShowDAOjdbc implements ShowDAO {
@@ -30,7 +31,7 @@ public class ShowDAOjdbc implements ShowDAO {
 			while (rset.next()) {
 				result = new ShowVO();
 				result.setMemberId(rset.getInt("memberId"));
-				result.setShowTime(rset.getTimestamp("showTime"));
+				result.setShowTime(ConvertType.convertToLocalTime(rset.getTimestamp("showTime")));
 				result.setWebsite(rset.getString("website"));
 				list.add(result);
 			}
@@ -52,7 +53,7 @@ public class ShowDAOjdbc implements ShowDAO {
 			while (rset.next()) {
 				ShowVO bean = new ShowVO();
 				bean.setMemberId(rset.getInt("memberId"));
-				bean.setShowTime(rset.getTimestamp("showTime"));
+				bean.setShowTime(ConvertType.convertToLocalTime(rset.getTimestamp("showTime")));
 				bean.setWebsite(rset.getString("website"));
 				list.add(bean);
 			}

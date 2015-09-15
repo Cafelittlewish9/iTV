@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.CloudDAO;
 import model.vo.CloudVO;
+import util.ConvertType;
 import util.GC;
 
 /**
@@ -40,7 +41,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -73,7 +74,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -101,7 +102,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -130,7 +131,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -169,7 +170,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {

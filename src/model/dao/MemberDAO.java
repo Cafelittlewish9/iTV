@@ -14,9 +14,7 @@ public interface MemberDAO {
 
 	int getId(String memberAccount);
 
-	int update(MemberVO member);
-
-	List<MemberVO> selectAll();
+	int update(MemberVO member);	
 
 	MemberVO findByPK(int memberId);
 

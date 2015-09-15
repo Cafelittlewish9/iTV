@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.ArticleDAO;
 import model.vo.ArticleVO;
+import util.ConvertType;
 import util.GC;
 
 /**
@@ -42,8 +43,8 @@ public class ArticleDAOjdbc implements ArticleDAO {
 				avo.setSubclassNo(rs.getString("subclassNo"));
 				avo.setArticleTitle(rs.getString("articleTitle"));
 				avo.setArticleContent(rs.getString("articleContent"));
-				avo.setPublishTime(rs.getTimestamp("publishTime"));
-				avo.setModifyTime(rs.getTimestamp("modifyTime"));
+				avo.setPublishTime(ConvertType.convertToLocalTime(rs.getTimestamp("publishTime")));				
+				avo.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				avo.setWatchTimes(rs.getLong("watchTimes"));
 				avos.add(avo);
 			}
@@ -81,8 +82,8 @@ public class ArticleDAOjdbc implements ArticleDAO {
 				avo.setSubclassNo(rs.getString("subclassNo"));
 				avo.setArticleTitle(rs.getString("articleTitle"));
 				avo.setArticleContent(rs.getString("articleContent"));
-				avo.setPublishTime(rs.getTimestamp("publishTime"));
-				avo.setModifyTime(rs.getTimestamp("modifyTime"));
+				avo.setPublishTime(ConvertType.convertToLocalTime(rs.getTimestamp("publishTime")));
+				avo.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				avo.setWatchTimes(rs.getLong("watchTimes"));
 				avos.add(avo);
 			}
@@ -180,10 +181,10 @@ public class ArticleDAOjdbc implements ArticleDAO {
 		ArticleDAO temp = new ArticleDAOjdbc();
 		ArticleVO avo = new ArticleVO();
 		
-		System.out.println(temp.selectByInput("","","",""));
+//		System.out.println(temp.selectByInput("","","",""));
 		
 		
-		// System.out.println(temp.selectAll());
+		 System.out.println(temp.selectAll());
 		// System.out.println(temp.delete(13, 2));
 
 		// avo.setMemberId(1);
