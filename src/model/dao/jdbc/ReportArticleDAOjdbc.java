@@ -60,6 +60,7 @@ public class ReportArticleDAOjdbc implements ReportArticleDAO {
 				articleClass.setClassName(rs.getString("className"));
 				articleClass.setSubclassName(rs.getString("subclassName"));
 				//article.setArticleClass(articleClass.);
+				article.setArticleClass(articleClass);
 				reportArticle.setArticle(article);
 				list.add(reportArticle);
 			}
