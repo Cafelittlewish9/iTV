@@ -12,7 +12,7 @@ public class CloudService {
 		this.dao = new CloudDAOjdbc();
 	}
 
-	public Collection<CloudVO> allFile(int memberId) {
+	/*public Collection<CloudVO> allFile(int memberId) {
 		return dao.selectAll(memberId);
 	}
 
@@ -32,13 +32,13 @@ public class CloudService {
 		return result;
 	}
 
-	/*public Collection<CloudVO> searchFile(String fileType, int memberId) {
+	public Collection<CloudVO> searchFile(String fileType, int memberId) {
 		Collection<CloudVO> result = null;
 		if (fileType != null && fileType != null) {
 			result = dao.
 		}
 		return result;
-	}*/
+	}
 
 	public Collection<CloudVO> searchFile(int memberId, String fileName, java.util.Date fromTime, java.util.Date toTime) {
 		Collection<CloudVO> result = null;
@@ -60,7 +60,7 @@ public class CloudService {
 		return result;
 	}
 
-	/*public Collection<CloudVO> searchFile(int memberId, java.util.Date fromTime, java.util.Date toTime, String fileType) {
+	public Collection<CloudVO> searchFile(int memberId, java.util.Date fromTime, java.util.Date toTime, String fileType) {
 		Collection<CloudVO> result = null;
 		if (fileType != null && fileType.trim().length() != 0) {
 			if (fromTime != null && toTime != null) {
@@ -68,7 +68,7 @@ public class CloudService {
 			}
 		}
 		return result;
-	}*/
+	}
 
 	public Collection<CloudVO> searchFile(int memberId, String fileName, java.util.Date fromTime, java.util.Date toTime,
 			String fileType) {
@@ -81,7 +81,7 @@ public class CloudService {
 			}
 		}
 		return result;
-	}
+	}*/
 	
 	public boolean addFile(int memberId, String fileName, String fileType, String filePath, long fileSize) {
 		boolean result = false;
@@ -97,6 +97,7 @@ public class CloudService {
 		return result;
 	}
 	public boolean deleteFile(int fileId) {
-		
+		boolean result=false;
+		return result;
 	}
 }

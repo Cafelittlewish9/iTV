@@ -20,4 +20,6 @@ public interface ChannelDAO {
 
 	public boolean deleteAll(int memberId);
 
+	List<ChannelVO> selectAll();
+
 }

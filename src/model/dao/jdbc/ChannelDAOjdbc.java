@@ -22,7 +22,6 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String PASSWORD = GC.PASSWORD;
 
 
-	private static final String SELECT_BY_ID_CHANNELNO = "select * from channel where memberId=? and channelNo=?";
 	/**
 	 * 查詢某會員設定的某頻道網址
 	 * @param memberId 設定頻道表之會員編號
@@ -57,7 +56,6 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		return result;
 	}
 
-	private static final String SELECT_BY_ID = "select * from channel where memberId = ?";
 	/**
 	 * 查詢某會員設定的所有頻道網址
 	 * @param memberId 設定頻道表之會員編號

@@ -230,6 +230,8 @@ public class CloudDAOjdbc implements CloudDAO {
 	@Override
 	public int updateFile(String filePath, long fileSize, int fileId) {
 		int result = -1;
+		CloudVO file=new CloudVO();
+
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_FILE);) {
 			stmt.setString(1, file.getFileName());
@@ -250,6 +252,7 @@ public class CloudDAOjdbc implements CloudDAO {
 	@Override
 	public int updateFileName(int fileId, String fileName, String filePath) {
 		int result = -1;
+		CloudVO file=new CloudVO();
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_FILENAME);) {
 			stmt.setString(1, file.getFileName());

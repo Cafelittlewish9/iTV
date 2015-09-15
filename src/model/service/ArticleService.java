@@ -37,6 +37,10 @@ public class ArticleService {
 	 * @return Collection<ArticleVO>
 	 */
 	public Collection<ArticleVO> searchByInput(String keyword) {
+		if (keyword.indexOf(" ")!=-1){
+			keyword.split(" ");
+			
+		}		
 		Collection<ArticleVO> list = dao.selectByInput(keyword,keyword,keyword,keyword);
 		return list;
 	}
@@ -135,7 +139,7 @@ public class ArticleService {
 		ArticleService service = new ArticleService();
 		// System.out.println(service.allArticle());
 		// System.out.println(service.allSubArticle("M"));
-		System.out.println(service.searchByInput("一天"));
+		System.out.println(service.searchByInput(""));
 		// System.out.println(service.addArticle());
 		// System.out.println(service.deleteArticle(4, 10));
 
