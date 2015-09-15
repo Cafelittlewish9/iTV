@@ -16,8 +16,6 @@ public interface MemberDAO {
 
 	public int update(MemberVO member);
 
-	public List<MemberVO> selectAll();
-
 	public MemberVO findByPK(int memberId);
 
 	public int switchSuspend(int memberId, boolean suspendRight);

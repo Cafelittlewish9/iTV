@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.LoginDAO;
 import model.vo.LoginVO;
+import util.ConvertType;
 import util.GC;
 
 public class LoginDAOjdbc implements LoginDAO {
@@ -31,7 +32,7 @@ public class LoginDAOjdbc implements LoginDAO {
 				bean = new LoginVO();
 				bean.setMemberAccount(rset.getString("memberAccount"));
 				bean.setIp(rset.getString("ip"));
-				bean.setLoginTime(rset.getTimestamp("loginTime"));
+				bean.setLoginTime(ConvertType.convertToLocalTime(rset.getTimestamp("loginTime")));
 				list.add(bean);
 			}
 		} catch (SQLException e) {
@@ -51,7 +52,7 @@ public class LoginDAOjdbc implements LoginDAO {
 			result = new ArrayList<LoginVO>();
 			while (rset.next()) {
 				LoginVO bean = new LoginVO();
-				bean.setLoginTime(rset.getTimestamp("loginTime"));
+				bean.setLoginTime(ConvertType.convertToLocalTime(rset.getTimestamp("loginTime")));
 				bean.setIp(rset.getString("ip"));
 				bean.setMemberAccount(rset.getString("memberAccount"));
 				result.add(bean);
@@ -73,7 +74,7 @@ public class LoginDAOjdbc implements LoginDAO {
 			ResultSet rset = stmt.executeQuery();
 			if (rset.next()) {
 				bean = new LoginVO();
-				bean.setLoginTime(rset.getTimestamp("loginTime"));
+				bean.setLoginTime(ConvertType.convertToLocalTime(rset.getTimestamp("loginTime")));
 				bean.setIp(rset.getString("ip"));
 				bean.setMemberAccount(rset.getString("memberAccount"));
 			}

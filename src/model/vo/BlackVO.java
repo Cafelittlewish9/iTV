@@ -3,7 +3,14 @@ package model.vo;
 public class BlackVO {
 	private int memberId;
 	private int blackedId;
+	private MemberVO member;
 	
+	public MemberVO getMember() {
+		return member;
+	}
+	public void setMember(MemberVO member) {
+		this.member = member;
+	}
 	@Override
 	public String toString() {
 		return memberId + ": " + blackedId + " (被黑的)";

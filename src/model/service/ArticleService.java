@@ -1,5 +1,6 @@
 package model.service;
 
+
 import java.util.Collection;
 import model.dao.ArticleDAO;
 import model.dao.jdbc.ArticleDAOjdbc;
@@ -30,63 +31,21 @@ public class ArticleService {
 	}
 
 	/**
-	 * 依照文章的類別來查詢文章
+	 * 依照文章子類別代碼來查詢文章
 	 * 
 	 * @param subclassNo
-	 *            文章的類別代碼
+	 *            文章的子類別代碼
 	 * @return Collection<ArticleVO>
 	 */
-	public Collection<ArticleVO> allSubArticle(String subclassNo) {
-		Collection<ArticleVO> list = null;
-		if (subclassNo != null && subclassNo.trim().length() != 0) {
-			list = dao.selectBySubclassNo(subclassNo);
-		}
+	public Collection<ArticleVO> searchByInput(String keyword) {
+		if (keyword.indexOf(" ")!=-1){
+			keyword.split(" ");
+			
+		}		
+		Collection<ArticleVO> list = dao.selectByInput(keyword,keyword,keyword,keyword);
 		return list;
 	}
 
-	/**
-	 * 用單一關鍵字搜尋文章
-	 * 
-	 * @param keyword
-	 *            關鍵字，可能是文章標題，帳號或暱稱
-	 * @return Collection<ArticleVO>
-	 */
-	public Collection<ArticleVO> searchArticle(String keyword) {
-		Collection<ArticleVO> list = null;
-		if (keyword != null && keyword.trim().length() != 0) {
-			list = dao.selectByMemberAccountAndArticleTitle(keyword, keyword);
-		}
-		return list;
-	}
-
-	/**
-	 * 用多個關鍵字搜尋文章
-	 * 
-	 * @param keywords
-	 *            關鍵字們，可能是文章標題和作者
-	 * @return Collection<ArticleVO>
-	 */
-	public Collection<ArticleVO> searchArticle(String... keywords) {
-		Collection<ArticleVO> list = null;
-		MemberVO memberBean = new MemberVO();
-		ArticleVO articleBean = new ArticleVO();
-		if (keywords != null && keywords.length != 0) {
-			if (dao.selectByMemberAccountAndArticleTitle(memberBean.getMemberAccount(),
-					articleBean.getArticleTitle()) != null) {
-				list = dao.selectByMemberAccountAndArticleTitle(memberBean.getMemberAccount(),
-						articleBean.getArticleTitle());
-			} else if (dao.selectByMemberAccountAndSubclassNo(memberBean.getMemberAccount(),
-					articleBean.getSubclassNo()) != null) {
-				list = dao.selectByMemberAccountAndSubclassNo(memberBean.getMemberAccount(),
-						articleBean.getSubclassNo());
-			} else if (dao.selectByMemberAccountOrArticleTitleAndSubclassNo(articleBean.getSubclassNo(),
-					memberBean.getMemberAccount(), articleBean.getArticleTitle()) != null) {
-				list = dao.selectByMemberAccountOrArticleTitleAndSubclassNo(articleBean.getSubclassNo(),
-						memberBean.getMemberAccount(), articleBean.getArticleTitle());
-			}
-		}
-		return list;
-	}
 
 	/**
 	 * 增加一篇文章
@@ -157,7 +116,7 @@ public class ArticleService {
 	 * 
 	 * @param bean
 	 *            必須包含 <b>articleContent</b> 與 <b>articleId</b>
-	 * @return true 新增成功; false 新增失敗
+	 * @return true 修改成功; false 修改失敗
 	 * @see #modifyArticle(String, int)
 	 */
 	public boolean modifyArticle(ArticleVO bean) {
@@ -204,6 +163,7 @@ public class ArticleService {
 		ArticleService service = new ArticleService();
 		// System.out.println(service.allArticle());
 		// System.out.println(service.allSubArticle("M"));
+		System.out.println(service.searchByInput(""));
 		// System.out.println(service.searchArticle("Pikachu", "皮卡丘"));
 		// System.out.println(service.addArticle());
 		// System.out.println(service.deleteArticle(1));

@@ -2,8 +2,12 @@ package util;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+
+import model.dao.ArticleDAO;
 import model.dao.LoginDAO;
+import model.dao.jdbc.ArticleDAOjdbc;
 import model.dao.jdbc.LoginDAOjdbc;
+import model.vo.ArticleVO;
 import model.vo.LoginVO;
 
 public class ConvertType {
@@ -13,7 +17,6 @@ public class ConvertType {
 		try {
 			result = Integer.parseInt(whichYouWantToConvert);
 		} catch (NumberFormatException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		return result;
@@ -24,7 +27,6 @@ public class ConvertType {
 		try {
 			result = Long.parseLong(whichYouWantToConvert);
 		} catch (NumberFormatException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		return result;
@@ -35,7 +37,6 @@ public class ConvertType {
 		try {
 			result = Byte.parseByte(whichYouWantToConvert);
 		} catch (NumberFormatException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		return result;
@@ -43,7 +44,6 @@ public class ConvertType {
 
 	public static java.util.Date convertToLocalTime(java.util.Date whichYouWantToConvert) {
 		java.util.Date result = null;
-		System.out.println(whichYouWantToConvert);
 		if (whichYouWantToConvert != null) {
 			long a = whichYouWantToConvert.getTime();
 			long b = ZonedDateTime.now().getOffset().getTotalSeconds()*1000;
@@ -69,12 +69,20 @@ public class ConvertType {
 		// java.util.Date(System.currentTimeMillis()), "Asia/Taipei");
 		// System.out.println(time);
 
+		ArticleDAO temp=new ArticleDAOjdbc();
 		LoginDAO dao = new LoginDAOjdbc();
-		List<LoginVO> bean = dao.selectAll("Pikachu");
+		
+		List<ArticleVO> beans=temp.selectByInput("", "", "Pikachu","");
+		for(ArticleVO b: beans){
+			java.util.Date time1 = ConvertType.convertToLocalTime(b.getPublishTime());
+			System.out.println(time1);
+		}
+		
+		/*List<LoginVO> bean = dao.selectAll("Pikachu");
 		for (LoginVO a : bean) {
 			java.util.Date time2 = ConvertType.convertToLocalTime(a.getLoginTime());
 			System.out.println(time2);
-		}
+		}*/
 		// System.out.println(ZonedDateTime.now().getOffset().getId());
 		// System.out.println(ZonedDateTime.now().getOffset().getTotalSeconds());
 		// System.out.println(ZonedDateTime.now().getOffset().getRules());

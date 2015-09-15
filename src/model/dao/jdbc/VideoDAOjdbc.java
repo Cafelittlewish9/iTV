@@ -10,6 +10,7 @@ import java.util.List;
 
 import model.dao.VideoDAO;
 import model.vo.VideoVO;
+import util.ConvertType;
 import util.GC;
 
 public class VideoDAOjdbc implements VideoDAO {
@@ -37,10 +38,10 @@ public class VideoDAOjdbc implements VideoDAO {
 				result.setVideoTitle(rset.getString("videoTitle"));
 				result.setVideoName(rset.getString("videoName"));
 				result.setVideoPath(rset.getString("videoPath"));
-				result.setVideoUploadTime(rset.getTimestamp("videoUploadTime"));
+				result.setVideoUploadTime(ConvertType.convertToLocalTime(rset.getTimestamp("videoUploadTime")));
 				result.setVideoWatchTimes(rset.getLong("videoWatchTimes"));
 				result.setVideoDescription(rset.getString("videoDescription"));
-				result.setVideoDescriptionModifyTime(rset.getTimestamp("videoDescriptionModifyTime"));
+				result.setVideoDescriptionModifyTime(ConvertType.convertToLocalTime(rset.getTimestamp("videoDescriptionModifyTime")));
 				list.add(result);
 			}
 		} catch (SQLException e) {
@@ -67,10 +68,10 @@ public class VideoDAOjdbc implements VideoDAO {
 				bean.setVideoTitle(rset.getString("videoTitle"));
 				bean.setVideoName(rset.getString("videoName"));
 				bean.setVideoPath(rset.getString("videoPath"));
-				bean.setVideoUploadTime(rset.getTimestamp("videoUploadTime"));
+				bean.setVideoUploadTime(ConvertType.convertToLocalTime(rset.getTimestamp("videoUploadTime")));
 				bean.setVideoWatchTimes(rset.getLong("videoWatchTimes"));
 				bean.setVideoDescription(rset.getString("videoDescription"));
-				bean.setVideoDescriptionModifyTime(rset.getTimestamp("videoDescriptionModifyTime"));
+				bean.setVideoDescriptionModifyTime(ConvertType.convertToLocalTime(rset.getTimestamp("videoDescriptionModifyTime")));
 				list.add(bean);
 			}
 		} catch (SQLException e) {

@@ -12,11 +12,22 @@ import model.vo.ChannelVO;
 import model.vo.MemberVO;
 import util.GC;
 
+/**
+ * @author iTV小組成員
+ *
+ */
 public class ChannelDAOjdbc implements ChannelDAO {
 	private static final String URL = GC.URL;
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
+
+	/**
+	 * 查詢某會員設定的某頻道網址
+	 * @param memberId 設定頻道表之會員編號
+	 * @param channelNo 頻道編號
+	 * @return ChannelVO
+	 */	
 	private static final String SELECT_BY_ID_CHANNELNO = "SELECT c.memberId, c.channelNo, c.broadcastWebsite, m.memberAccount, m.broadcastTitle FROM Channel c join Member m ON c.broadcastWebsite = m.broadcastWebsite where c.memberId = ? and channelNo = ?";
 
 	@Override
@@ -45,6 +56,11 @@ public class ChannelDAOjdbc implements ChannelDAO {
 		return result;
 	}
 
+	/**
+	 * 查詢某會員設定的所有頻道網址
+	 * @param memberId 設定頻道表之會員編號
+	 * @return List<ChannelVO>
+	 */	
 	private static final String SELECT_BY_ID = "SELECT c.memberId, c.channelNo, c.broadcastWebsite, m.memberAccount, m.broadcastTitle FROM Channel c join Member m ON c.broadcastWebsite = m.broadcastWebsite where c.memberId = ?";
 
 	@Override
@@ -76,6 +92,11 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	}
 
 	private static final String SELECT_ALL = "select * from channel";
+	/**
+	 * 查詢網站內所有頻道表
+	 * @return List<ChannelVO>
+	 */	
+	@Override
 
 	public List<ChannelVO> selectAll() {
 		List<ChannelVO> list = null;
@@ -98,7 +119,11 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	}
 
 	private static final String INSERT = "insert into channel(memberId,channelNo,broadcastWebsite) values (?,?,?)";
-
+	/**
+	 * 新增觀看頻道
+	 * @param bean 必須包含 <b>memberId</b>、<b>channelNo</b>與<b>broadcastWebsite</b>
+	 * @return List<ChannelVO>
+	 */	
 	@Override
 	public int insert(ChannelVO bean) {
 		int result = -1;
@@ -118,7 +143,13 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	}
 
 	private static final String UPDATE = "update channel set broadcastWebsite=? where memberId=? and channelNo=?";
-
+	/**
+	 * 修改頻道表
+	 * @param broadcastWebsite 頻道網址
+	 * @param memberId 
+	 * @param channelNo
+	 * @return int 修改成功為1；不成功回傳-1
+	 */
 	@Override
 	public int update(String broadcastWebsite, int memberId, int channelNo) {
 		int result = -1;
@@ -152,7 +183,13 @@ public class ChannelDAOjdbc implements ChannelDAO {
 	}
 
 	private static final String DELETE = "delete from channel where memberId=? and channelNo=?";
-
+	/**
+	 * 刪除頻道表
+	 * @param broadcastWebsite 頻道網址
+	 * @param memberId 
+	 * @param channelNo
+	 * @return int 修改成功為1；不成功回傳-1
+	 */
 	@Override
 	public boolean delete(int memberId, int channelNo) {
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);

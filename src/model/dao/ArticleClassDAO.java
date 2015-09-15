@@ -8,13 +8,17 @@ public interface ArticleClassDAO {
 
 	public List<ArticleClassVO> selectAll();
 
+
+	public List<ArticleClassVO> select(String subclassNo);
+
 	public ArticleClassVO selectBySubclassNo(String subclassNo);
 	
 	public ArticleClassVO selectBySubclassName(String subclassName);
 
-	public boolean insert(ArticleClassVO articleClass);
 
-	public boolean update(ArticleClassVO articleClass);
+	public boolean insert(ArticleClassVO bean);
+
+	public boolean update(ArticleClassVO bean);
 
 	public boolean delete(String subclassNo);
 

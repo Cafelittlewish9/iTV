@@ -9,15 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 import model.dao.CloudDAO;
 import model.vo.CloudVO;
+import util.ConvertType;
 import util.GC;
 
+/**
+ * @author iTV小組成員
+ *
+ */
 public class CloudDAOjdbc implements CloudDAO {
 	private static final String URL = GC.URL;
 	private static final String USERNAME = GC.USERNAME;
 	private static final String PASSWORD = GC.PASSWORD;
 
 	private static final String SELECT_ALL = "SELECT * FROM Cloud";
-
+	/**
+	 * 查詢所有會員雲端硬碟裡的所有檔案 
+	 * @return List<CloudVO>
+	 */
 	@Override
 	public List<CloudVO> selectAll() {
 		List<CloudVO> list = null;
@@ -33,7 +41,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -44,7 +52,12 @@ public class CloudDAOjdbc implements CloudDAO {
 	}
 
 	private static final String SELECT_BY_MEMBERID = "SELECT * FROM Cloud WHERE memberId = ?";
-
+	/**
+	 * 查詢某會員雲端硬碟內所有檔案
+	 * 
+	 * @param memberId 文章類別名稱
+	 * @return true 增加成功; false 增加失敗
+	 */	
 	@Override
 	public List<CloudVO> selectByMemberId(int memberId) {
 		List<CloudVO> list = null;
@@ -61,7 +74,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -89,7 +102,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -118,7 +131,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -157,7 +170,7 @@ public class CloudDAOjdbc implements CloudDAO {
 				file.setFileType(rs.getString("fileType"));
 				file.setFilePath(rs.getString("filePath"));
 				file.setFileSize(rs.getLong("fileSize"));
-				file.setModifyTime(rs.getTimestamp("modifyTime"));
+				file.setModifyTime(ConvertType.convertToLocalTime(rs.getTimestamp("modifyTime")));
 				list.add(file);
 			}
 		} catch (SQLException e) {
@@ -218,6 +231,8 @@ public class CloudDAOjdbc implements CloudDAO {
 	@Override
 	public int updateFile(String filePath, long fileSize, int fileId) {
 		int result = -1;
+		CloudVO file=new CloudVO();
+
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_FILE);) {
 			stmt.setString(1, filePath);
@@ -236,6 +251,7 @@ public class CloudDAOjdbc implements CloudDAO {
 	@Override
 	public int updateFileName(int fileId, String fileName, String filePath) {
 		int result = -1;
+		CloudVO file=new CloudVO();
 		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 				PreparedStatement stmt = conn.prepareStatement(UPDATE_FILENAME);) {
 			stmt.setString(1, fileName);

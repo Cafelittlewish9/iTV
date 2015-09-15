@@ -5,12 +5,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import model.dao.MemberDAO;
 import model.vo.MemberVO;
+import util.ConvertType;
 import util.GC;
 
 public class MemberDAOjdbc implements MemberDAO {
@@ -42,7 +44,6 @@ public class MemberDAOjdbc implements MemberDAO {
 	// 用戶只需要輸入密碼跟信箱，自動產生memberAccount和broadcastWebsite網址
 	// 問題在於若不同人在不同網站申請相同帳號的信箱，後者會無法申請，因為自動產生的broadcastWebsite會重複
 	private static final String INSERT2 = "INSERT INTO member (memberEmail,memberPassword,memberAccount,broadcastWebsite) VALUES (?,cast( ? as varbinary(50)), ?,?)";
-
 	@Override
 	public int insert2(MemberVO member) {
 		// 要先檢查bean是否為null
@@ -133,9 +134,9 @@ public class MemberDAOjdbc implements MemberDAO {
 			pstmt.setString(11, member.getBroadcastClassName());
 			if (member.getBroadcastTime() != null) {
 				long broad = member.getBroadcastTime().getTime();
-				pstmt.setDate(12, new java.sql.Date(broad));
+				pstmt.setTimestamp(12, (Timestamp) new java.util.Date(broad));
 			} else {
-				pstmt.setDate(12, null);
+				pstmt.setTimestamp(12, null);
 			}
 			pstmt.setString(13, member.getBroadcastDescription());
 			pstmt.setInt(14, member.getMemberId());
@@ -144,37 +145,6 @@ public class MemberDAOjdbc implements MemberDAO {
 			e.printStackTrace();
 		}
 		return updateCount;
-	}
-
-	@Override
-	public List<MemberVO> selectAll() {
-		List<MemberVO> list = null;
-		try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-				PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Member");
-				ResultSet rs = stmt.executeQuery();) {
-			list = new ArrayList<MemberVO>();
-			while (rs.next()) {
-				MemberVO member = new MemberVO();
-				member.setMemberId(rs.getInt("memberId"));
-				member.setMemberAccount(rs.getString("memberAccount"));
-				member.setMemberPassword(rs.getBytes("memberPassword"));
-				member.setMemberEmail(rs.getString("memberEmail"));
-				member.setMemberName(rs.getString("memberName"));
-				member.setMemberNickname(rs.getString("memberNickname"));
-				member.setMemberBirthday(rs.getDate("memberBirthday"));
-				member.setMemberRegisterTime(rs.getTimestamp("memberRegisterTime"));
-				member.setMemberSelfIntroduction(rs.getString("memberSelfIntroduction"));
-				member.setBroadcastWebsite(rs.getString("broadcastWebsite"));
-				member.setBroadcastTitle(rs.getString("broadcastTitle"));
-				member.setBroadcastClassName(rs.getString("broadcastClassName"));
-				member.setBroadcastWatchTimes(rs.getLong("broadcastWatchTimes"));
-				list.add(member);
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getErrorCode() + " : " + e.getMessage());
-			e.printStackTrace();
-		}
-		return list;
 	}
 
 	private static final String FIND_BY_PK = "SELECT memberId,memberAccount,memberEmail,memberFB,memberGoogle,memberTwitter,memberName,"
@@ -200,12 +170,12 @@ public class MemberDAOjdbc implements MemberDAO {
 				member.setMemberNickname(rs.getString("memberNickname"));
 				member.setMemberBirthday(rs.getDate("memberBirthday"));
 				member.setMemberPhoto(rs.getBytes("memberPhoto"));
-				member.setMemberRegisterTime(rs.getDate("memberRegisterTime"));
+				member.setMemberRegisterTime(ConvertType.convertToLocalTime(rs.getDate("memberRegisterTime")));
 				member.setMemberSelfIntroduction(rs.getString("memberSelfIntroduction"));
 				member.setBroadcastWebsite(rs.getString("broadcastWebsite"));
 				member.setBroadcastTitle(rs.getString("broadcastTitle"));
 				member.setBroadcastClassName(rs.getString("broadcastClassName"));
-				member.setBroadcastTime(rs.getDate("broadcastTime"));
+				member.setBroadcastTime(ConvertType.convertToLocalTime(rs.getTimestamp("broadcastTime")));
 				member.setBroadcastDescription(rs.getString("broadcastDescription"));
 				member.setBroadcastWatchTimes(rs.getLong("broadcastWatchTimes"));
 			}
@@ -236,11 +206,11 @@ public class MemberDAOjdbc implements MemberDAO {
 	// 測試程式
 	public static void main(String[] args) throws SQLException, ParseException {
 		MemberDAO temp = new MemberDAOjdbc();
-		// memberDao的insert，與insert的差異在於用戶需輸入memberAccount
+		// memberDao的insert，與insert2的差異在於用戶需輸入memberAccount
 		MemberVO member1 = new MemberVO();
-		// member1.setMemberAccount("Micky Wong");
+		// member1.setMemberAccount("");
 		member1.setMemberPassword("G".getBytes());
-		member1.setMemberEmail("wolfrin@gmail.com");
+		member1.setMemberEmail("godzilla@gmail.com");
 		int count1 = temp.insert2(member1);
 		System.out.println("insert " + count1 + " rows");
 
