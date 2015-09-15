@@ -13,13 +13,13 @@ public class CloudService {
 	}
 
 	public Collection<CloudVO> allFile(int memberId) {
-		return dao.selectAll(memberId);
+		return dao.selectByMemberId(memberId);
 	}
 
 	public Collection<CloudVO> searchFile(int memberId, String fileName) {
 		Collection<CloudVO> result = null;
 		if (fileName != null && fileName.trim().length() != 0) {
-			result = dao.select(fileName);
+			result = dao.selectByFileName(memberId, fileName);
 		}
 		return result;
 	}
@@ -27,7 +27,7 @@ public class CloudService {
 	public Collection<CloudVO> searchFile(int memberId, java.util.Date fromTime, java.util.Date toTime) {
 		Collection<CloudVO> result = null;
 		if (fromTime != null && toTime != null) {
-			result = dao.select(fromTime, toTime);
+			result = dao.selectByTime(memberId, fromTime, toTime);
 		}
 		return result;
 	}
@@ -35,7 +35,7 @@ public class CloudService {
 	public Collection<CloudVO> searchFile(String fileType, int memberId) {
 		Collection<CloudVO> result = null;
 		if (fileType != null && fileType != null) {
-			result = dao.
+			result = dao.selectByFileType(memberId, fileType);
 		}
 		return result;
 	}
@@ -44,7 +44,7 @@ public class CloudService {
 		Collection<CloudVO> result = null;
 		if (fileName != null && fileName.trim().length() != 0) {
 			if (fromTime != null && toTime != null) {
-				result = dao.select(fileName, fromTime, toTime);
+				result = dao.selectByFileNameAndTime(memberId, fileName, fromTime, toTime);
 			}
 		}
 		return result;
@@ -54,7 +54,7 @@ public class CloudService {
 		Collection<CloudVO> result = null;
 		if (fileName != null && fileName.trim().length() != 0) {
 			if (fileType != null && fileType.trim().length() != 0) {
-				result = dao.
+				result = dao.selectByFileNameAndFileType(memberId, fileName, fileType);
 			}
 		}
 		return result;
@@ -64,7 +64,7 @@ public class CloudService {
 		Collection<CloudVO> result = null;
 		if (fileType != null && fileType.trim().length() != 0) {
 			if (fromTime != null && toTime != null) {
-				result = dao.
+				result = dao.selectByFileTypeAndTime(memberId, fromTime, toTime, fileType);
 			}
 		}
 		return result;
@@ -76,7 +76,7 @@ public class CloudService {
 		if (fileName != null && fileName.trim().length() != 0) {
 			if (fileType != null && fileType.trim().length() != 0) {
 				if (fromTime != null && toTime != null) {
-					result = dao.
+					result = dao.selectByFileNameFileTypeAndTime(memberId, fileName, fromTime, toTime, fileType);
 				}
 			}
 		}
@@ -96,7 +96,12 @@ public class CloudService {
 		boolean result = false;
 		return result;
 	}
-	public boolaen deleteFile(int fileId) {
-		
+	public boolean deleteFile(int fileId) {
+		int temp = dao.delete(fileId);
+		if(temp==1){
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
